@@ -1,4 +1,5 @@
 # 📖 Read Novel Vocab Engine (看小说背单词引擎)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 ### A demo of “Learn English by Reading Stories”
 （通过阅读故事学英语｜看小说背单词引擎）
 
@@ -25,7 +26,7 @@
 **正在寻找完整版体验？**
 正式产品会拥有精心编写的 **50 篇连载故事**，覆盖 **4000+** 核心考研/GRE 词汇，提供更完整的进阶学习体验。
 
-👉 **在线体验完整版：** [https://wordnovelwebdemo.click](https://wordnovelwebdemo.click)
+👉 **在线体验完整版demo：** [https://wordnovelwebdemo.click](https://wordnovelwebdemo.click)
 
 👉 **关注开发者小红书：** **@kylin的小世界** (获取最新动态及完整数据包)
 
@@ -83,10 +84,10 @@ read-novel-vocab-engine/
 ## ⚠️ 注意事项
 1. 数据隔离：本项目仅包含 data_demo.json。完整版数据 data_full.json 属于私有资产，未包含在此仓库中。
 
-代码混淆：为了保护知识产权，执行 npm run build:demo 后生成的 dist/ 目录中，核心逻辑代码会被混淆。
+2. 代码混淆：为了保护知识产权，执行 npm run build:demo 后生成的 dist/ 目录中，核心逻辑代码会被混淆。
 
 ## 📄 版权与许可
-本项目代码部分遵循开源协议，内容数据（故事文本）仅供演示使用。
+本项目核心代码遵循 GPL-3.0 开源协议，内容数据（故事文本）仅供演示使用，保留所有权利。
 
 如需商业合作或获取完整内容授权，请通过小红书联系本项目开发者：@kylin的小世界
 
