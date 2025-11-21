@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 防止浏览器自动翻译 -->
+    <meta name="google" content="notranslate">
+    <meta http-equiv="Content-Language" content="zh-CN">
+    <title>学习统计 - 50篇小说背单词</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        /* ========== 全局样式 ========== */
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        /* ========== 容器样式 ========== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* ========== 顶部导航栏样式 ========== */
+        .top-navigation {
+            /* 弹性布局：横向排列导航链接 */
+            display: flex;
+            /* 链接间距 */
+            gap: 24px;
+            /* 底部间距 */
+            margin-bottom: 30px;
+            /* 顶部内边距 */
+            padding-top: 10px;
+            /* 底部内边距 */
+            padding-bottom: 10px;
+            /* 底部边框：分隔导航和内容 */
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        /* 导航链接样式 */
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #347474;
+            text-decoration: none;
+            font-size: 1.05rem;
+            font-weight: 500;
+            transition: all 0.2s ease-in-out;
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+
+        /* 导航链接悬停效果 */
+        .nav-link:hover {
+            /* 悬停时颜色变深 */
+            color: #285f5f;
+            /* 悬停时背景色 */
+            background-color: #e8f1f1;
+        }
+
+        /* 导航图标样式 */
+        .nav-link svg {
+            /* 图标宽度 */
+            width: 16px;
+            /* 图标高度 */
+            height: 16px;
+            /* 图标颜色：继承文字颜色 */
+            fill: currentColor;
+            /* 防止图标缩小 */
+            flex-shrink: 0;
+        }
+
+        /* 响应式设计：小屏幕适配 */
+        @media (max-width: 600px) {
+            .top-navigation {
+                /* 减小链接间距 */
+                gap: 12px;
+                /* 允许换行 */
+                flex-wrap: wrap;
+            }
+
+            .nav-link {
+                font-size: 0.95rem;
+                padding: 5px 8px;
+            }
+
+            .nav-link svg {
+                /* 调整图标大小 */
+                width: 14px;
+                height: 14px;
+            }
+        }
+
+        /* ========== 标题样式 ========== */
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #111111;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666666;
+            font-size: 1rem;
+            margin-bottom: 40px;
+        }
+
+        /* ========== 统计卡片样式 ========== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        .stat-card-title {
+            font-size: 0.9rem;
+            color: #666666;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .stat-card-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2e9eb7;
+            margin-bottom: 5px;
+        }
+
+        .stat-card-unit {
+            font-size: 0.85rem;
+            color: #999999;
+        }
+
+        /* ========== 图表容器样式 ========== */
+        .chart-section {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        .chart-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #111111;
+            margin-bottom: 20px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-bottom: 20px;
+        }
+
+        /* ========== 完成祝贺样式 ========== */
+        #completion-celebration {
+            margin-top: 30px;
+            padding: 30px;
+            background: linear-gradient(135deg, #e6f7ff 0%, #f0f9ff 100%);
+            border-radius: 12px;
+            border: 2px solid #2e9eb7;
+            text-align: center;
+        }
+
+        .celebration-message h3 {
+            font-size: 1.5rem;
+            color: #2e9eb7;
+            margin: 0 0 10px 0;
+            font-weight: 700;
+        }
+
+        .celebration-message p {
+            font-size: 1rem;
+            color: #666666;
+            margin: 0 0 20px 0;
+            line-height: 1.6;
+        }
+
+        .reset-btn {
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            background-color: #2e9eb7;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 4px 12px rgba(46, 158, 183, 0.3);
+        }
+
+        .reset-btn:hover {
+            background-color: #2189a8;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(46, 158, 183, 0.4);
+        }
+
+        .reset-btn:active {
+            transform: translateY(0);
+        }
+
+        /* ========== 故事进度列表样式 ========== */
+        .story-progress-list {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        .story-progress-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .story-progress-item:last-child {
+            border-bottom: none;
+        }
+
+        .story-progress-title {
+            flex: 1;
+            font-weight: 500;
+            color: #333333;
+            margin-right: 20px;
+        }
+
+        .story-progress-bar-container {
+            flex: 2;
+            height: 8px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-right: 15px;
+        }
+
+        .story-progress-bar {
+            height: 100%;
+            background-color: #2e9eb7;
+            border-radius: 4px;
+            transition: width 0.3s ease-in-out;
+        }
+
+        .story-progress-percentage {
+            min-width: 60px;
+            text-align: right;
+            font-weight: 600;
+            color: #2e9eb7;
+            font-size: 0.9rem;
+        }
+
+        /* ========== 空状态样式 ========== */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999999;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .empty-state-text {
+            font-size: 1.1rem;
+        }
+
+        /* ========== 响应式设计 ========== */
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .story-progress-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .story-progress-bar-container {
+                width: 100%;
+                margin: 10px 0;
+            }
+
+            .chart-container {
+                height: 250px;
+            }
+        }
+
+        /* ===== 版权页脚样式 ===== */
+        .site-footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-top: 2rem; /* 确保和页面内容有一定间距 */
+            border-top: 1px solid #eee; /* 一条细微的分割线 */
+        }
+        .site-footer p {
+            margin: 0;
+            font-size: 0.85em; /* 字体小一点 */
+            color: #999; /* 颜色淡一点，不抢眼 */
+        }
+    </style>
+    <script type="module" src="/src/js/main.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- ========== 顶部导航栏 ========== -->
+        <nav class="top-navigation">
+            <a href="index.html" class="nav-link">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/>
+                </svg>
+                故事列表
+            </a>
+            <a href="words.html" class="nav-link">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2zm0 15l-5-2.18L7 18V5h10v13z"/>
+                </svg>
+                我的生词本
+            </a>
+            <span class="nav-link" style="color: #347474; cursor: default; background-color: transparent;">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 3v18h18v-2H5V3H3zm4 12h2v4H7v-4zm4-4h2v8h-2v-8zm4-4h2v12h-2V7z"/>
+                </svg>
+                学习统计
+            </span>
+            <a href="settings.html" class="nav-link">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09A1.65 1.65 0 0 0 15 4.6a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9c.34.27.76.42 1.2.42H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                设置
+            </a>
+            <a href="guide.html" class="nav-link">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1.8"/>
+                    <line x1="12" y1="16" x2="12" y2="12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                    <circle cx="12" cy="8" r="1" fill="currentColor"/>
+                </svg>
+                使用说明
+            </a>
+        </nav>
+
+        <!-- ========== 标题 ========== -->
+        <h1>学习统计</h1>
+        <p class="subtitle">追踪你的学习进度和成就</p>
+
+        <!-- ========== 统计卡片 ========== -->
+        <div class="stats-grid" id="stats-grid">
+            <!-- 动态生成 -->
+        </div>
+
+        <!-- ========== 学习时长图表 ========== -->
+        <div class="chart-section">
+            <h2 class="chart-title">学习时长趋势</h2>
+            <div class="chart-container">
+                <canvas id="timeChart"></canvas>
+            </div>
+        </div>
+
+        <!-- ========== 学习进度图表 ========== -->
+        <div class="chart-section">
+            <h2 class="chart-title">整体学习进度</h2>
+            <div class="chart-container">
+                <canvas id="progressChart"></canvas>
+            </div>
+            <!-- 完成祝贺和重置按钮区域 -->
+            <div id="completion-celebration" style="display: none;">
+                <div class="celebration-message">
+                    <h3>🎉 恭喜你！已完成所有故事！</h3>
+                    <p>你已成功完成所有 50 篇故事的学习，这是一个了不起的成就！</p>
+                </div>
+                <button id="reset-progress-btn" class="reset-btn">开始新一轮学习</button>
+            </div>
+        </div>
+
+        <!-- ========== 各故事学习进度 ========== -->
+        <div class="story-progress-list">
+            <h2 class="chart-title">各故事学习进度</h2>
+            <div id="story-progress-list">
+                <!-- 动态生成 -->
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // 格式化时间函数
+        function formatTime(minutes) {
+            if (minutes < 60) {
+                return minutes.toFixed(0);
+            }
+            const hours = Math.floor(minutes / 60);
+            const mins = Math.floor(minutes % 60);
+            return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
+        }
+    </script>
+    <script>
+        /**
+         * 学习统计页面主逻辑
+         */
+
+        // ========== 获取学习数据 ==========
+        let learningData = null;
+        let stats = null;
+
+        // ========== 渲染统计卡片 ==========
+        function renderStatCards() {
+            const statsGrid = document.getElementById('stats-grid');
+            const cards = [
+                {
+                    title: '总学习时长',
+                    value: formatTime(stats.totalTime),
+                    unit: '分钟'
+                },
+                {
+                    title: '今日学习时长',
+                    value: formatTime(stats.todayTime),
+                    unit: '分钟'
+                },
+                {
+                    title: '本周学习时长',
+                    value: formatTime(stats.weekTime),
+                    unit: '分钟'
+                },
+                {
+                    title: '已完成故事',
+                    value: stats.completedStories,
+                    unit: `/ ${stats.totalStories} 篇`
+                },
+                {
+                    title: '总体进度',
+                    value: stats.totalProgress.toFixed(1),
+                    unit: '%'
+                },
+                {
+                    title: '连续学习天数',
+                    value: stats.consecutiveDays,
+                    unit: '天'
+                }
+            ];
+
+            statsGrid.innerHTML = cards.map(card => `
+                <div class="stat-card">
+                    <div class="stat-card-title">${card.title}</div>
+                    <div class="stat-card-value">${card.value}</div>
+                    <div class="stat-card-unit">${card.unit}</div>
+                </div>
+            `).join('');
+        }
+
+        // ========== 渲染学习时长图表 ==========
+        function renderTimeChart() {
+            if (!learningData) return;
+            const ctx = document.getElementById('timeChart').getContext('2d');
+            const timeData = getTimeDataForChart(learningData);
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: timeData.labels,
+                    datasets: [{
+                        label: '每日学习时长（分钟）',
+                        data: timeData.values,
+                        borderColor: '#2e9eb7',
+                        backgroundColor: 'rgba(46, 158, 183, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#2e9eb7',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                font: {
+                                    size: 12
+                                },
+                                color: '#333333'
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            padding: 10,
+                            titleFont: {
+                                size: 14
+                            },
+                            bodyFont: {
+                                size: 13
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: '#666666',
+                                font: {
+                                    size: 11
+                                }
+                            },
+                            grid: {
+                                color: '#f0f0f0'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: '#666666',
+                                font: {
+                                    size: 11
+                                }
+                            },
+                            grid: {
+                                color: '#f0f0f0'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // ========== 渲染学习进度图表 ==========
+        async function renderProgressChart() {
+            if (!learningData) return;
+            const stories = await getAllStories();
+            const ctx = document.getElementById('progressChart').getContext('2d');
+            const progressData = getProgressDataForChart(learningData);
+
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['已完成', '进行中', '未开始'],
+                    datasets: [{
+                        data: [
+                            progressData.completed,
+                            progressData.inProgress,
+                            progressData.notStarted
+                        ],
+                        backgroundColor: [
+                            '#2e9eb7',
+                            '#4dd0e1',
+                            '#e0e0e0'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'bottom',
+                            labels: {
+                                font: {
+                                    size: 12
+                                },
+                                color: '#333333',
+                                padding: 15
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            padding: 10,
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.parsed || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                                    return `${label}: ${value} 篇 (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // 检查是否完成所有故事（总进度 >= 100%）
+            if (stats && stats.totalProgress >= 100) {
+                const celebrationDiv = document.getElementById('completion-celebration');
+                if (celebrationDiv) {
+                    celebrationDiv.style.display = 'block';
+                }
+            } else {
+                const celebrationDiv = document.getElementById('completion-celebration');
+                if (celebrationDiv) {
+                    celebrationDiv.style.display = 'none';
+                }
+            }
+        }
+
+        // ========== 渲染各故事进度列表 ==========
+        async function renderStoryProgress() {
+            const container = document.getElementById('story-progress-list');
+            const stories = await getAllStories();
+
+            if (stories.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">
+                            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#999999" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                            </svg>
+                        </div>
+                        <div class="empty-state-text">暂无故事数据</div>
+                    </div>
+                `;
+                return;
+            }
+
+            const html = stories.map((story, index) => {
+                const storyId = story.id;
+                const progress = getStoryProgress(storyId, learningData);
+                const percentage = (progress * 100).toFixed(0);
+
+                return `
+                    <div class="story-progress-item">
+                        <div class="story-progress-title">${story.title || storyId}</div>
+                        <div class="story-progress-bar-container">
+                            <div class="story-progress-bar" style="width: ${percentage}%"></div>
+                        </div>
+                        <div class="story-progress-percentage">${percentage}%</div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = html;
+        }
+
+        // ========== 初始化页面 ==========
+        async function init() {
+            // 先加载故事数据
+            await getAllStories();
+            
+            // 获取学习数据
+            learningData = getLearningData();
+            stats = calculateStats(learningData);
+            
+            renderStatCards();
+            renderTimeChart();
+            await renderProgressChart();
+            await renderStoryProgress();
+        }
+
+        // ========== 重置学习进度功能 ==========
+        /**
+         * 重置学习进度（只清空进度数据，保留成就数据）
+         * 成就数据（永久保留）：
+         * - LEARNING_SESSIONS（学习时长记录）
+         * 状态数据（可重置）：
+         * - STORY_PROGRESS（故事总进度）
+         * - MODE_USAGE（模式使用记录）
+         * - DETAILED_PROGRESS（细粒度进度）
+         */
+        function resetProgress() {
+            // 确认弹窗
+            const confirmed = confirm(
+                '你确定要开始新一轮学习吗？\n\n' +
+                '这将会清空你所有故事的"已完成"标记，让你可以从头开始。\n\n' +
+                '别担心，你的**"累计学习时长"和"累计打卡天数"将会被永久保留**。'
+            );
+
+            if (!confirmed) {
+                return;
+            }
+
+            // 只清空进度相关的数据
+            try {
+                // 清空故事总进度
+                localStorage.removeItem('word_novel_story_progress');
+                
+                // 清空模式使用记录
+                localStorage.removeItem('word_novel_mode_usage');
+                
+                // 清空细粒度进度
+                localStorage.removeItem('word_novel_detailed_progress');
+                
+                // 保留成就数据：
+                // - LEARNING_SESSIONS（学习时长记录）
+                // - DIFFICULT_WORDS（生词本）
+                
+                console.log('学习进度已重置，成就数据已保留');
+                
+                // 重新加载页面以更新显示
+                alert('重置成功！你的学习进度已清零，但成就数据已保留。');
+                window.location.reload();
+            } catch (error) {
+                console.error('重置进度时出错:', error);
+                alert('重置失败，请刷新页面重试。');
+            }
+        }
+
+        // ========== 绑定重置按钮事件 ==========
+        document.addEventListener('DOMContentLoaded', function() {
+            const resetBtn = document.getElementById('reset-progress-btn');
+            if (resetBtn) {
+                resetBtn.addEventListener('click', resetProgress);
+            }
+        });
+
+        /* ========== 数据导出/导入功能 ========== */
+
+        /**
+         * 获取所有学习数据
+         * @returns {Object} 包含所有学习数据的对象
+         */
+        function getAllData() {
+            const data = {
+                version: '1.0',
+                exportDate: new Date().toISOString(),
+                learningSessions: getLearningSessions(),
+                storyProgress: getStoryProgressData(),
+                detailedProgress: getDetailedProgress(),
+                difficultWords: getDifficultWords()
+            };
+            return data;
+        }
+
+        /**
+         * 导出数据为 JSON 文件
+         */
+        function exportData() {
+            try {
+                const data = getAllData();
+                const dataStr = JSON.stringify(data, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(dataBlob);
+                
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `word-novel-backup-${new Date().toISOString().slice(0, 10)}.json`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                
+                alert('数据导出成功！文件已下载到您的下载文件夹。');
+            } catch (error) {
+                console.error('导出数据失败:', error);
+                alert('导出失败，请稍后重试。');
+            }
+        }
+
+        /**
+         * 从文件导入数据
+         * @param {Event} event - 文件选择事件
+         */
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            // 确认是否覆盖当前数据
+            if (!confirm('导入数据将覆盖当前所有学习数据，是否继续？\n\n建议先导出当前数据作为备份。')) {
+                event.target.value = ''; // 清空文件选择
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    // 验证数据格式
+                    if (!data.version || !data.learningSessions) {
+                        throw new Error('数据格式不正确');
+                    }
+                    
+                    // 导入数据到 localStorage
+                    if (data.learningSessions) {
+                        saveLearningSessions(data.learningSessions);
+                    }
+                    if (data.storyProgress) {
+                        saveStoryProgressData(data.storyProgress);
+                    }
+                    if (data.detailedProgress) {
+                        saveDetailedProgress(data.detailedProgress);
+                    }
+                    if (data.difficultWords) {
+                        saveDifficultWords(data.difficultWords);
+                    }
+                    
+                    alert('数据导入成功！页面即将刷新。');
+                    window.location.reload();
+                } catch (error) {
+                    console.error('导入数据失败:', error);
+                    alert('导入失败，请检查文件格式是否正确。');
+                }
+                
+                // 清空文件选择
+                event.target.value = '';
+            };
+            
+            reader.readAsText(file);
+        }
+
+        /**
+         * 复制数据到剪贴板
+         */
+        function copyDataToClipboard() {
+            try {
+                const data = getAllData();
+                const dataStr = JSON.stringify(data, null, 2);
+                
+                // 使用 Clipboard API
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(dataStr).then(() => {
+                        alert('数据已复制到剪贴板！\n\n你可以粘贴到笔记软件保存。');
+                    }).catch(() => {
+                        // 降级方案：使用传统方法
+                        fallbackCopyToClipboard(dataStr);
+                    });
+                } else {
+                    // 降级方案
+                    fallbackCopyToClipboard(dataStr);
+                }
+            } catch (error) {
+                console.error('复制失败:', error);
+                alert('复制失败，请使用"导出数据"功能。');
+            }
+        }
+
+        /**
+         * 降级复制方案（兼容旧浏览器）
+         */
+        function fallbackCopyToClipboard(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-9999px';
+            document.body.appendChild(textArea);
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                alert('数据已复制到剪贴板！');
+            } catch (error) {
+                console.error('降级复制失败:', error);
+                alert('复制失败，请手动导出数据文件。');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+
+        // 页面加载完成后初始化
+    document.addEventListener('appDataReady', () => {
+        init();
+    }, { once: true });
+    </script>
+    <footer class="site-footer">
+        <p>© 2025 @kylin的小世界. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>
+

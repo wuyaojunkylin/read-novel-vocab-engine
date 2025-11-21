@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google" content="notranslate">
+    <meta http-equiv="Content-Language" content="zh-CN">
+    <title>设置 - 50篇小说背单词</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .top-navigation {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 30px;
+            padding: 10px 0;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #347474;
+            text-decoration: none;
+            font-size: 1.05rem;
+            font-weight: 500;
+            transition: all 0.2s ease-in-out;
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            color: #285f5f;
+            background-color: #e8f1f1;
+        }
+
+        .nav-link svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+            flex-shrink: 0;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #111111;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            margin-top: 0;
+            margin-bottom: 30px;
+            color: #64748B;
+        }
+
+        .card {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            margin: 0 0 8px;
+            color: #0f172a;
+        }
+
+        .section-subtitle {
+            font-size: 0.95rem;
+            color: #64748B;
+            margin: -4px 0 24px;
+        }
+
+        .data-actions,
+        .reset-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .data-btn,
+        .reset-card {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 22px 20px;
+            background-color: #f9fafb;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            text-align: left;
+            color: #0f172a;
+        }
+
+        .data-btn:hover,
+        .reset-card:hover {
+            background-color: #f0f7ff;
+            border-color: #2e9eb7;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 18px rgba(46, 158, 183, 0.18);
+        }
+
+        .data-btn svg,
+        .reset-card svg {
+            width: 32px;
+            height: 32px;
+            color: #2e9eb7;
+        }
+
+        .data-btn span,
+        .reset-card span {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .data-btn small,
+        .reset-card small {
+            font-size: 0.9rem;
+            color: #64748B;
+        }
+
+        .danger {
+            border-color: #FCA5A5;
+            background-color: #FEF2F2;
+        }
+
+        .danger:hover {
+            background-color: #FEE2E2;
+            border-color: #F87171;
+        }
+
+        .danger svg {
+            color: #F87171;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .data-btn,
+            .reset-card {
+                padding: 18px;
+            }
+        }
+
+        /* ===== 版权页脚样式 ===== */
+        .site-footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-top: 2rem; /* 确保和页面内容有一定间距 */
+            border-top: 1px solid #eee; /* 一条细微的分割线 */
+        }
+        .site-footer p {
+            margin: 0;
+            font-size: 0.85em; /* 字体小一点 */
+            color: #999; /* 颜色淡一点，不抢眼 */
+        }
+    </style>
+    <script type="module" src="/src/js/main.js"></script>
+</head>
+<body>
+    <div class="container">
+        <nav class="top-navigation">
+            <a href="index.html" class="nav-link">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/>
+                </svg>
+                故事列表
+            </a>
+            <a href="words.html" class="nav-link">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2zm0 15l-5-2.18L7 18V5h10v13z"/>
+                </svg>
+                我的生词本
+            </a>
+            <a href="stats.html" class="nav-link">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 3v18h18v-2H5V3H3zm4 12h2v4H7v-4zm4-4h2v8h-2v-8zm4-4h2v12h-2V7z"/>
+                </svg>
+                学习统计
+            </a>
+            <span class="nav-link" style="color: #347474; cursor: default; background-color: transparent;">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09A1.65 1.65 0 0 0 15 4.6a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9c.34.27.76.42 1.2.42H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                设置
+            </span>
+            <a href="index.html?guide=1" class="nav-link">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1.8"/>
+                    <line x1="12" y1="16" x2="12" y2="12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                    <circle cx="12" cy="8" r="1" fill="currentColor"/>
+                </svg>
+                使用说明
+            </a>
+        </nav>
+
+        <h1>设置</h1>
+        <p class="subtitle">管理你的学习数据与偏好</p>
+
+        <section class="card">
+            <h2 class="section-title">学习数据</h2>
+            <p class="section-subtitle">备份、恢复或迁移你的学习记录</p>
+            <div class="data-actions">
+                <button class="data-btn" onclick="exportData()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    <span>导出学习数据</span>
+                    <small>下载 JSON 备份文件</small>
+                </button>
+
+                <button class="data-btn" onclick="document.getElementById('import-file-input').click()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    <span>导入学习数据</span>
+                    <small>从备份文件恢复</small>
+                </button>
+                <input type="file" id="import-file-input" accept=".json" style="display:none" onchange="importData(event)">
+
+                <button class="data-btn" onclick="copyDataToClipboard()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                    <span>复制到剪贴板</span>
+                    <small>快速备份为文本</small>
+                </button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="section-title">重置与恢复</h2>
+            <p class="section-subtitle">需要重新开始？请谨慎操作，重置内容不可撤销</p>
+            <div class="reset-actions">
+                <button class="reset-card" onclick="resetStoryProgress()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="3 6 3 12 9 12"></polyline>
+                        <path d="M3.51 16.5a9 9 0 1 0 2.13-9.03L3 12"></path>
+                    </svg>
+                    <span>重置故事进度</span>
+                    <small>清除故事学习进度，保留学习时长与生词本</small>
+                </button>
+
+                <button class="reset-card danger" onclick="resetAllData()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 3h18"></path>
+                        <path d="M8 3v-1a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v1"></path>
+                        <path d="M5 6h14l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6z"></path>
+                    </svg>
+                    <span>重置所有进度</span>
+                    <small>清除所有学习数据，恢复到初始状态</small>
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // 数据存储键名（如果 main.js 已加载则使用全局的，否则使用本地定义）
+        const STORAGE_KEYS = window.STORAGE_KEYS || {
+            LEARNING_SESSIONS: 'word_novel_learning_sessions',
+            STORY_PROGRESS: 'word_novel_story_progress',
+            MODE_USAGE: 'word_novel_mode_usage',
+            DETAILED_PROGRESS: 'word_novel_detailed_progress',
+            DIFFICULT_WORDS: 'word_novel_difficult_words'
+        };
+        const REVIEW_LOG_STORAGE_KEY = 'reviewHistoryLog';
+
+        function getReviewLogSnapshot() {
+            try {
+                const raw = localStorage.getItem(REVIEW_LOG_STORAGE_KEY);
+                return raw ? JSON.parse(raw) : [];
+            } catch (error) {
+                console.warn('读取复习日志失败:', error);
+                return [];
+            }
+        }
+
+        function getAllData() {
+            return {
+                version: '1.0',
+                exportDate: new Date().toISOString(),
+                learningSessions: getLearningSessions(),
+                storyProgress: getStoryProgressData(),
+                detailedProgress: getDetailedProgress(),
+                difficultWords: getDifficultWords(),
+                reviewLog: getReviewLogSnapshot()
+            };
+        }
+
+        function exportData() {
+            try {
+                const data = getAllData();
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `word-novel-backup-${new Date().toISOString().slice(0, 10)}.json`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                alert('数据导出成功！文件已下载到您的下载文件夹。');
+            } catch (error) {
+                console.error('导出数据失败:', error);
+                alert('导出失败，请稍后重试。');
+            }
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (!confirm('导入数据将覆盖当前所有学习数据，是否继续？\n\n建议先导出当前数据作为备份。')) {
+                event.target.value = '';
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (!data || !data.version) {
+                        throw new Error('数据格式不正确');
+                    }
+
+                    if (Array.isArray(data.learningSessions)) {
+                        saveLearningSessions(data.learningSessions);
+                    }
+                    if (data.storyProgress) {
+                        saveStoryProgressData(data.storyProgress);
+                    }
+                    if (data.detailedProgress) {
+                        saveDetailedProgress(data.detailedProgress);
+                    }
+                    if (Array.isArray(data.difficultWords)) {
+                        saveDifficultWords(data.difficultWords);
+                    }
+                    if (Array.isArray(data.reviewLog)) {
+                        localStorage.setItem(REVIEW_LOG_STORAGE_KEY, JSON.stringify(data.reviewLog));
+                    }
+
+                    alert('数据导入成功！页面即将刷新。');
+                    window.location.reload();
+                } catch (error) {
+                    console.error('导入数据失败:', error);
+                    alert('导入失败，请检查文件格式是否正确。');
+                }
+
+                event.target.value = '';
+            };
+
+            reader.readAsText(file);
+        }
+
+        function copyDataToClipboard() {
+            try {
+                const data = getAllData();
+                const text = JSON.stringify(data, null, 2);
+
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(text).then(() => {
+                        alert('数据已复制到剪贴板！');
+                    }).catch(() => fallbackCopyToClipboard(text));
+                } else {
+                    fallbackCopyToClipboard(text);
+                }
+            } catch (error) {
+                console.error('复制失败:', error);
+                alert('复制失败，请使用“导出学习数据”功能。');
+            }
+        }
+
+        function fallbackCopyToClipboard(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.left = '-9999px';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                alert('数据已复制到剪贴板！');
+            } catch (error) {
+                console.error('降级复制失败:', error);
+                alert('复制失败，请使用“导出学习数据”功能。');
+            }
+            document.body.removeChild(textarea);
+        }
+
+        function resetStoryProgress() {
+            const confirmed = confirm(
+                '重置故事进度将清空你的故事完成状态和细粒度进度，但会保留学习时长与生词本。\n\n确定继续吗？'
+            );
+            if (!confirmed) return;
+
+            try {
+                localStorage.removeItem(STORAGE_KEYS.STORY_PROGRESS);
+                localStorage.removeItem(STORAGE_KEYS.MODE_USAGE);
+                localStorage.removeItem(STORAGE_KEYS.DETAILED_PROGRESS);
+                alert('故事进度已重置！');
+                window.location.reload();
+            } catch (error) {
+                console.error('重置故事进度失败:', error);
+                alert('操作失败，请稍后再试。');
+            }
+        }
+
+        function resetAllData() {
+            const confirmed = confirm(
+                '重置所有进度将删除学习时长、故事进度、生词本以及复习记录，操作不可撤销。\n\n确定要恢复到初始状态吗？'
+            );
+            if (!confirmed) return;
+
+            try {
+                localStorage.removeItem(STORAGE_KEYS.LEARNING_SESSIONS);
+                localStorage.removeItem(STORAGE_KEYS.STORY_PROGRESS);
+                localStorage.removeItem(STORAGE_KEYS.MODE_USAGE);
+                localStorage.removeItem(STORAGE_KEYS.DETAILED_PROGRESS);
+                localStorage.removeItem(STORAGE_KEYS.DIFFICULT_WORDS);
+                localStorage.removeItem(REVIEW_LOG_STORAGE_KEY);
+                alert('所有学习数据已清除，欢迎重新开始！');
+                window.location.reload();
+            } catch (error) {
+                console.error('重置所有数据失败:', error);
+                alert('操作失败，请稍后再试。');
+            }
+        }
+    </script>
+    <footer class="site-footer">
+        <p>© 2025 @kylin的小世界. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>

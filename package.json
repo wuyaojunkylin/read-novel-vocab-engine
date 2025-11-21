@@ -1,0 +1,25 @@
+{
+  "name": "word_novel_web_demo",
+  "version": "1.0.0",
+  "description": "> 一个基于故事的英语单词学习应用，通过阅读50篇精选英文小说，在语境中学习和记忆单词。",
+  "main": "learningData.js",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build:demo": "npm run create-demo && vite build",
+    "preview": "vite preview",
+    "create-demo": "python3 data_processing/create_demo.py",
+    "prebuild": "npm run create-demo"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "terser": "^5.44.1",
+    "vite": "^7.2.2"
+  },
+  "dependencies": {
+    "@vercel/analytics": "^1.5.0"
+  }
+}

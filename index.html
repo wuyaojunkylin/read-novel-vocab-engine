@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<!-- ========== HTML5 文档声明 ========== -->
+<!-- 
+    这是一个故事列表页面，展示所有可以学习的英语故事
+    功能：从 data.json 加载故事列表，用户点击进入具体故事页面
+-->
+<html lang="zh-CN">
+<head>
+    <!-- ========== 字符编码 ========== -->
+    <!-- 使用 UTF-8 编码，支持中文和特殊字符 -->
+    <meta charset="UTF-8">
+    
+    <!-- ========== 响应式视口设置 ========== -->
+    <!-- 设置页面在移动设备上的显示方式：宽度自适应，初始缩放比例为1 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- ========== 防止浏览器自动翻译 ========== -->
+    <meta name="google" content="notranslate">
+    <meta http-equiv="Content-Language" content="zh-CN">
+    
+    <!-- ========== 页面标题 ========== -->
+    <title>50篇小说背单词</title>
+    
+    <!-- ========== CSS 样式部分 ========== -->
+    <style>
+        /* ========== 全局样式重置 ========== */
+        /**
+         * 移除浏览器默认的外边距和内边距
+         * 确保页面样式一致性
+         */
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* ========== 页面主体样式 ========== */
+        /**
+         * 设置页面主体样式：
+         * - 字体：使用系统字体堆栈，自动适配不同操作系统（苹果系统、Windows等）
+         * - 背景色：浅灰色（#f9f9f9），营造舒适的阅读环境
+         * - 文字颜色：深灰色（#333333），保证良好的可读性
+         * - 行高：1.6倍，提高段落文本的可读性
+         */
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* ========== 容器样式 ========== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* ========== 顶部导航栏样式 ========== */
+        .top-navigation {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 30px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #347474;
+            text-decoration: none;
+            font-size: 1.05rem;
+            font-weight: 500;
+            transition: all 0.2s ease-in-out;
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            color: #285f5f;
+            background-color: #e8f1f1;
+        }
+
+        .nav-link svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+            flex-shrink: 0;
+        }
+
+        /* ========== 页面标题区域 ========== */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .page-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #111111;
+            margin: 0;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #2e9eb7;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid #2e9eb7;
+            transition: all 0.2s ease-in-out;
+            background-color: #ffffff;
+        }
+
+        .action-btn:hover {
+            color: #ffffff;
+            background-color: #2e9eb7;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(46, 158, 183, 0.2);
+        }
+
+        .action-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            flex-shrink: 0;
+        }
+
+        /* ========== 故事链接卡片样式 ========== */
+        /**
+         * 故事列表中的每个链接样式：
+         * - 去除下划线：text-decoration: none
+         * - 块级显示：display: block，占据整行，提升点击区域
+         * - 背景色：白色，与页面背景形成对比
+         * - 内边距：上下20px，左右25px，增加卡片内部空间
+         * - 底部间距：15px，卡片之间的间隔
+         * - 圆角：12px，苹果风格的圆角设计
+         * - 阴影：轻微阴影增加层次感
+         * - 过渡动画：0.2秒渐变动画，提升交互体验
+         * - 字体大小：1.1rem（约17.6px），适中的字号
+         * - 字体粗细：500（中等加粗）
+         * - 文字颜色：#007AFF（苹果蓝色）
+         */
+        .story-link {
+            text-decoration: none;
+            display: block;
+            background-color: #ffffff;
+            padding: 20px 25px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s ease-in-out;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #2e9eb7;
+        }
+
+        /* 故事卡片内的链接样式重置 */
+        .story-item {
+            color: inherit;
+        }
+
+        /* ========== 悬停交互效果 ========== */
+        /**
+         * 鼠标悬停时的交互效果：
+         * - 向上移动：translateY(-2px)，模拟轻微浮起效果
+         * - 阴影增强：增强阴影使卡片更突出
+         * 这些效果提升了用户交互的视觉反馈
+         */
+        .story-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        /* ========== 故事进度显示样式 ========== */
+        .story-item {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .story-title {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #2e9eb7;
+        }
+
+        .story-progress-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .story-progress-bar {
+            flex: 1;
+            height: 8px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .story-progress-fill {
+            height: 100%;
+            background-color: #2e9eb7;
+            border-radius: 4px;
+            transition: width 0.3s ease-in-out;
+        }
+
+        .story-progress-text {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #2e9eb7;
+            min-width: 45px;
+            text-align: right;
+        }
+
+        /* 悬停时显示完整进度 */
+        a:hover .story-progress-text {
+            color: #2189a8;
+        }
+
+        /* ========== 欢迎弹窗样式 ========== */
+        .welcome-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .welcome-overlay.show {
+            opacity: 1;
+        }
+
+        .welcome-modal {
+            background-color: #ffffff;
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            transform: scale(0.9);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .welcome-overlay.show .welcome-modal {
+            transform: scale(1);
+        }
+
+        .welcome-modal h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #111111;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .welcome-modal .subtitle {
+            font-size: 1rem;
+            color: #666666;
+            margin-bottom: 30px;
+        }
+
+        .welcome-section {
+            margin-bottom: 25px;
+        }
+
+        .welcome-section h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2e9eb7;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .welcome-section p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #555555;
+            margin: 0 0 10px 0;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .step-card {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 3px solid #2e9eb7;
+        }
+
+        .step-card .step-title {
+            font-weight: 600;
+            color: #2e9eb7;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+        .step-card .step-desc {
+            font-size: 0.85rem;
+            color: #666666;
+            line-height: 1.5;
+        }
+
+        .welcome-actions {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .btn-primary {
+            flex: 1;
+            padding: 12px 24px;
+            background-color: #2e9eb7;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .btn-primary:hover {
+            background-color: #2189a8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(46, 158, 183, 0.3);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 600px) {
+            .welcome-modal {
+                padding: 30px 20px;
+                margin: 20px;
+            }
+
+            .steps-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome-modal h2 {
+                font-size: 1.6rem;
+            }
+        }
+
+        /* ========== 搜索框样式 ========== */
+        .search-container {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            pointer-events: none;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 45px 12px 45px;
+            font-size: 1rem;
+            border: 2px solid #e5e5e5;
+            border-radius: 10px;
+            background-color: #ffffff;
+            transition: all 0.2s ease-in-out;
+            box-sizing: border-box;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #2e9eb7;
+            box-shadow: 0 0 0 3px rgba(46, 158, 183, 0.1);
+        }
+
+        .clear-search-btn {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #999999;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .clear-search-btn:hover {
+            background-color: #f0f0f0;
+            color: #666666;
+        }
+
+        .search-result-info {
+            padding: 10px 15px;
+            background-color: #f0f7ff;
+            border-left: 3px solid #2e9eb7;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            color: #555555;
+        }
+
+        .search-result-info strong {
+            color: #2e9eb7;
+        }
+
+        /* ===== 升级卡片 (CTA) 样式 ===== */
+        .story-card.upgrade-card {
+            display: block;
+            margin-top: 20px;
+            background-color: #f0f7fb;
+            border: 2px dashed #2e9eb7;
+            padding: 20px;
+            border-radius: 12px;
+            text-decoration: none;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        .story-card.upgrade-card:hover {
+            background-color: #e6f1f8;
+        }
+
+        .story-card.upgrade-card .story-title {
+            color: #1a5c6e;
+            margin: 0;
+        }
+
+        .story-card.upgrade-card .story-subtitle {
+            color: #555;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .story-card.upgrade-card .progress-label {
+            color: #2e9eb7;
+            font-weight: bold;
+        }
+
+        /* ========== 响应式设计 ========== */
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+            
+            .page-title {
+                font-size: 1.8rem;
+            }
+            
+            .header-actions {
+                width: 100%;
+                justify-content: flex-start;
+            }
+            
+            .action-btn {
+                flex: 1;
+                justify-content: center;
+                min-width: 120px;
+            }
+            
+            .story-link {
+                padding: 16px 18px;
+            }
+            
+            .story-title {
+                font-size: 1rem;
+            }
+            
+            .top-navigation {
+                gap: 16px;
+                flex-wrap: wrap;
+            }
+            
+            .search-input {
+                font-size: 0.9rem;
+                padding: 10px 16px 10px 40px;
+            }
+        }
+
+        /* ===== 版权页脚样式 ===== */
+        .site-footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-top: 2rem; /* 确保和页面内容有一定间距 */
+            border-top: 1px solid #eee; /* 一条细微的分割线 */
+        }
+        .site-footer p {
+            margin: 0;
+            font-size: 0.85em; /* 字体小一点 */
+            color: #999; /* 颜色淡一点，不抢眼 */
+        }
+    </style>
+    <script type="module" src="/src/js/main.js"></script>
+</head>
+<body>
+    <!-- ========== 欢迎引导弹窗 ========== -->
+    <div class="welcome-overlay" id="welcomeOverlay" style="display: none;">
+        <div class="welcome-modal">
+            <h2>👋 欢迎来到「50篇小说背单词」</h2>
+            <p class="subtitle">通过阅读精彩故事，轻松积累英语词汇</p>
+
+            <div class="welcome-section">
+                <h3>📖 产品特色</h3>
+                <p>• <strong>50篇精选故事</strong>：涵盖不同主题和难度，让学习充满乐趣</p>
+                <p>• <strong>智能进度追踪</strong>：实时记录学习时长和完成度</p>
+                <p>• <strong>生词本管理</strong>：一键收藏难词，随时复习</p>
+            </div>
+
+            <div class="welcome-section">
+                <h3>🎯 四种学习模式</h3>
+                <div class="steps-grid">
+                    <div class="step-card">
+                        <div class="step-title">Step 1: 阅读模式</div>
+                        <div class="step-desc">完整阅读故事，理解上下文</div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-title">Step 2: 中文填空</div>
+                        <div class="step-desc">隐藏中文释义，点击显示答案</div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-title">Step 3: 英文填空</div>
+                        <div class="step-desc">隐藏英文单词，测试记忆</div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-title">Step 4: 单词表</div>
+                        <div class="step-desc">查看所有单词，语音播放</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="welcome-section">
+                <h3>💡 使用建议</h3>
+                <p>建议按顺序完成 4 个学习步骤，从阅读到填空，循序渐进掌握单词。每完成一个步骤，进度条会自动更新。</p>
+            </div>
+
+            <div class="welcome-actions" style="gap: 12px;">
+                <button class="btn-primary" onclick="closeWelcome()">开始学习</button>
+                <a class="btn-primary" href="guide.html" style="background-color: transparent; color: var(--color-primary); border: 1px solid var(--color-primary); text-decoration: none;">
+                    查看详细说明
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- ========== 顶部导航栏 ========== -->
+        <nav class="top-navigation">
+            <span class="nav-link" style="color: #347474; cursor: default; background-color: transparent;">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/>
+                </svg>
+                故事列表
+            </span>
+            <a href="words.html" class="nav-link">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2zm0 15l-5-2.18L7 18V5h10v13z"/>
+                </svg>
+                我的生词本
+            </a>
+            <a href="stats.html" class="nav-link">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 3v18h18v-2H5V3H3zm4 12h2v4H7v-4zm4-4h2v8h-2v-8zm4-4h2v12h-2V7z"/>
+                </svg>
+                学习统计
+            </a>
+            <a href="settings.html" class="nav-link">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09A1.65 1.65 0 0 0 15 4.6a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9c.34.27.76.42 1.2.42H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                设置
+            </a>
+            <a href="guide.html" class="nav-link">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1.8"/>
+                    <line x1="12" y1="16" x2="12" y2="12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                    <circle cx="12" cy="8" r="1" fill="currentColor"/>
+                </svg>
+                使用说明
+            </a>
+        </nav>
+
+        <!-- ========== 页面标题区域 ========== -->
+        <header class="page-header">
+            <h1 class="page-title">故事列表</h1>
+    </header>
+
+        <!-- ========== 搜索框 ========== -->
+        <div class="search-container">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.35-4.35"></path>
+            </svg>
+            <input type="text" id="search-input" class="search-input" placeholder="搜索故事标题或编号...">
+            <button id="clear-search-btn" class="clear-search-btn" style="display: none;">✕</button>
+        </div>
+
+        <!-- ========== 搜索结果提示 ========== -->
+        <div id="search-result-info" class="search-result-info" style="display: none;"></div>
+
+        <!-- ========== 主内容区域 ========== -->
+    <main id="story-list">
+        <!-- 故事链接将通过 JavaScript 动态加载 -->
+    </main>
+    </div>
+
+    <!-- ========== JavaScript 功能实现 ========== -->
+    <script>
+        /**
+         * 加载故事列表并渲染到页面
+         * 
+         * 功能说明：
+         * 1. 从 data.json 文件加载所有故事数据
+         * 2. 为每个故事创建一个可点击的链接卡片
+         * 3. 点击卡片跳转到对应的故事详情页
+         * 
+         * @async 异步函数，需要等待数据加载完成
+         * @returns {Promise<void>} 返回空值，主要用于异步处理
+         */
+        // 全局变量：存储所有故事数据
+        let allStories = [];
+
+        async function loadStoryList() {
+            try {
+                // 1. 加载所有故事数据（支持 file:// 协议）
+                allStories = await getAllStories();
+
+                if (!Array.isArray(allStories) || allStories.length === 0) {
+                    console.warn('故事列表为空或数据格式异常');
+                }
+
+                // 2. 渲染故事列表
+                renderStoryList(allStories);
+
+                // 3. 初始化搜索功能
+                initSearch();
+            } catch (error) {
+                console.error('加载故事列表失败:', error);
+                const storyListContainer = document.getElementById('story-list');
+                storyListContainer.innerHTML = '<p>加载失败，请刷新页面重试。</p>';
+            }
+        }
+
+        /**
+         * 渲染故事列表
+         */
+        function renderStoryList(stories) {
+            const storyListContainer = document.getElementById('story-list');
+            storyListContainer.innerHTML = '';
+
+            if (stories.length === 0) {
+                storyListContainer.innerHTML = '<p style="text-align: center; color: #999999; padding: 40px 0;">没有找到匹配的故事</p>';
+                return;
+            }
+
+            const detailedProgress = getDetailedProgress();
+            
+            stories.forEach(story => {
+                const link = document.createElement('a');
+                link.href = `story.html?id=${story.id}`;
+                link.className = 'story-link';
+                
+                const storyProgress = detailedProgress[story.id] || {};
+                const step1Progress = (storyProgress.step1 || 0) * 0.25;
+                const step2Progress = (storyProgress.step2?.progress || 0) * 0.25;
+                const step3Progress = (storyProgress.step3?.progress || 0) * 0.25;
+                const step4Progress = (storyProgress.step4 || 0) * 0.25;
+                const totalProgress = step1Progress + step2Progress + step3Progress + step4Progress;
+                const progressPercent = Math.round(totalProgress * 100);
+                
+                link.innerHTML = `
+                    <div class="story-item">
+                        <div class="story-title">${story.title}</div>
+                        <div class="story-progress-container">
+                            <div class="story-progress-bar">
+                                <div class="story-progress-fill" style="width: ${progressPercent}%"></div>
+                            </div>
+                            <div class="story-progress-text">${progressPercent}%</div>
+                        </div>
+                    </div>
+                `;
+                
+                storyListContainer.appendChild(link);
+            });
+
+            appendUpgradeCard(storyListContainer);
+        }
+
+        /**
+         * 初始化搜索功能
+         */
+        function initSearch() {
+            const searchInput = document.getElementById('search-input');
+            const clearSearchBtn = document.getElementById('clear-search-btn');
+            const searchResultInfo = document.getElementById('search-result-info');
+
+            searchInput.addEventListener('input', function(e) {
+                const keyword = e.target.value.trim();
+                
+                if (keyword) {
+                    clearSearchBtn.style.display = 'flex';
+                } else {
+                    clearSearchBtn.style.display = 'none';
+                }
+
+                filterStories(keyword);
+            });
+
+            clearSearchBtn.addEventListener('click', function() {
+                searchInput.value = '';
+                clearSearchBtn.style.display = 'none';
+                searchResultInfo.style.display = 'none';
+                renderStoryList(allStories);
+            });
+
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    filterStories(searchInput.value.trim());
+                }
+            });
+        }
+
+        /**
+         * 搜索过滤故事
+         */
+        function filterStories(keyword) {
+            const searchResultInfo = document.getElementById('search-result-info');
+
+            if (!keyword) {
+                renderStoryList(allStories);
+                searchResultInfo.style.display = 'none';
+                return;
+            }
+
+            const filteredStories = allStories.filter(story => {
+                const titleMatch = story.title.toLowerCase().includes(keyword.toLowerCase());
+                const idMatch = story.id.toString().includes(keyword);
+                return titleMatch || idMatch;
+            });
+
+            if (filteredStories.length > 0) {
+                searchResultInfo.innerHTML = `找到 <strong>${filteredStories.length}</strong> 个匹配结果`;
+                searchResultInfo.style.display = 'block';
+            } else {
+                searchResultInfo.innerHTML = `没有找到匹配 "<strong>${keyword}</strong>" 的故事`;
+                searchResultInfo.style.display = 'block';
+            }
+
+            renderStoryList(filteredStories);
+        }
+
+        function appendUpgradeCard(container) {
+            const card = document.createElement('a');
+            card.href = '#';
+            card.className = 'story-link story-card upgrade-card';
+            card.innerHTML = `
+                <div class="story-item">
+                    <div class="story-title">解锁完整版 (共50篇)</div>
+                    <p class="story-subtitle">完整小程序开发中，点击获取上线通知！</p>
+                    <div class="story-progress-container">
+                        <div class="story-progress-text progress-label">敬请期待</div>
+                    </div>
+                </div>
+            `;
+            card.addEventListener('click', (event) => {
+                event.preventDefault();
+                if (window.dataManager && typeof window.dataManager.showUpgradePrompt === 'function') {
+                    window.dataManager.showUpgradePrompt();
+                }
+            });
+            container.appendChild(card);
+        }
+
+        /**
+         * 页面加载完成后执行
+         * 当 HTML 文档完全加载并解析完成后，自动执行 loadStoryList 函数
+         */
+        if (window.dataManager && window.dataManager.appData && window.dataManager.appData.length > 0) {
+            loadStoryList();
+        } else {
+            document.addEventListener('appDataReady', () => {
+                loadStoryList();
+            }, { once: true });
+        }
+ 
+        /* ========== 欢迎引导功能 ========== */
+
+        function openWelcomeGuide() {
+            const welcomeOverlay = document.getElementById('welcomeOverlay');
+            if (!welcomeOverlay) return;
+            welcomeOverlay.style.display = 'flex';
+            requestAnimationFrame(() => {
+                welcomeOverlay.classList.add('show');
+            });
+        }
+
+        function closeWelcome() {
+            const welcomeOverlay = document.getElementById('welcomeOverlay');
+            if (!welcomeOverlay) return;
+            welcomeOverlay.classList.remove('show');
+            setTimeout(() => {
+                welcomeOverlay.style.display = 'none';
+            }, 300);
+        }
+
+        (function initGuideFromQuery() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('guide') === '1') {
+                openWelcomeGuide();
+                params.delete('guide');
+                const newQuery = params.toString();
+                const newUrl = window.location.pathname + (newQuery ? `?${newQuery}` : '');
+                window.history.replaceState({}, '', newUrl);
+            }
+        })();
+    </script>
+    <footer class="site-footer">
+        <p>© 2025 @kylin的小世界. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>
+

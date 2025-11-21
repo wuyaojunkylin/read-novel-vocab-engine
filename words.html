@@ -1,0 +1,4689 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 防止浏览器自动翻译 -->
+    <meta name="google" content="notranslate">
+    <meta http-equiv="Content-Language" content="zh-CN">
+    <title>我的生词本 - 50篇小说背单词</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        /* ========== 全局样式 ========== */
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --color-primary: #2F9EB9;
+            --color-accent: #347474;
+            --color-warning: #F59E0B;
+            --color-text-strong: #0F172A;
+            --color-text-muted: #64748B;
+            --color-border: #E2E8F0;
+            --color-base: #F9F9F9;
+            --color-card: #FFFFFF;
+            --shadow-base: 0 1px 3px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(0, 0, 0, 0.04);
+        }
+
+        body {
+            font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--color-base);
+            color: var(--color-text-strong);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        /* ========== 容器样式 ========== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* ========== 顶部导航栏样式 ========== */
+        .top-navigation {
+            /* 弹性布局：横向排列导航链接 */
+            display: flex;
+            /* 链接间距 */
+            gap: 24px;
+            /* 底部间距 */
+            margin-bottom: 30px;
+            /* 顶部内边距 */
+            padding-top: 10px;
+            /* 底部内边距 */
+            padding-bottom: 10px;
+            /* 底部边框：分隔导航和内容 */
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        /* 导航链接样式 */
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #347474;
+            text-decoration: none;
+            font-size: 1.05rem;
+            font-weight: 500;
+            transition: all 0.2s ease-in-out;
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            color: #285f5f;
+            background-color: #e8f1f1;
+        }
+
+        /* 导航图标样式 */
+        .nav-link svg {
+            /* 图标宽度 */
+            width: 16px;
+            /* 图标高度 */
+            height: 16px;
+            /* 图标颜色：继承文字颜色 */
+            fill: currentColor;
+            /* 防止图标缩小 */
+            flex-shrink: 0;
+        }
+
+        /* 响应式设计：小屏幕适配 */
+        @media (max-width: 600px) {
+            .top-navigation {
+                /* 减小链接间距 */
+                gap: 12px;
+                /* 允许换行 */
+                flex-wrap: wrap;
+            }
+
+            .nav-link {
+                /* 调整字体大小 */
+                font-size: 0.95rem;
+                /* 减小内边距 */
+                padding: 5px 8px;
+            }
+
+            .nav-link svg {
+                /* 调整图标大小 */
+                width: 14px;
+                height: 14px;
+            }
+        }
+
+        /* ========== 标题样式 ========== */
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--color-text-strong);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: var(--color-text-muted);
+            font-size: 1rem;
+            margin-bottom: 40px;
+        }
+
+        /* ========== 生词本样式 ========== */
+        .difficult-words-section {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .chart-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #111111;
+            margin-bottom: 20px;
+        }
+
+        .difficult-words-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .difficult-words-table th {
+            background-color: #f9f9f9;
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #333333;
+            border-bottom: 1px solid #eee;
+            line-height: 1.5;
+            border-left: none;
+            border-right: none;
+        }
+
+        .difficult-words-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            line-height: 1.6;
+            vertical-align: middle;
+            text-align: left;
+            border-left: none;
+            border-right: none;
+        }
+
+        .difficult-words-table tr:hover {
+            background-color: #fafafa;
+        }
+        
+        /* Kebab菜单样式 */
+        .kebab-menu-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .kebab-menu-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px 8px;
+            color: #666666;
+            font-size: 1.2rem;
+            line-height: 1;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+        
+        .kebab-menu-btn:hover {
+            background-color: #f0f0f0;
+            color: #333333;
+        }
+        
+        .kebab-icon {
+            display: inline-block;
+            transform: rotate(90deg);
+            font-weight: bold;
+        }
+        
+        .kebab-menu {
+            position: absolute;
+            right: 0;
+            top: 100%;
+            margin-top: 4px;
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            min-width: 140px;
+            z-index: 1000;
+            overflow: hidden;
+        }
+        
+        .kebab-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            padding: 10px 16px;
+            background: none;
+            border: none;
+            text-align: left;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: #333333;
+            transition: background-color 0.2s ease;
+        }
+        
+        .kebab-menu-item:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .kebab-menu-item:first-child {
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+        
+        .kebab-menu-item:last-child {
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+        
+        .kebab-menu-item .icon-sm {
+            margin-right: 8px;
+            color: #666666;
+        }
+        
+        .kebab-menu-item:hover .icon-sm {
+            color: #333333;
+        }
+        
+        /* 扁平化图标样式 */
+        .icon-sm {
+            width: 16px;
+            height: 16px;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 6px;
+        }
+        
+        .mastery-icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+        }
+        
+        .mastery-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .difficult-word-cell {
+            font-weight: 600;
+            color: #2e9eb7;
+        }
+
+        .difficult-phonetic-cell {
+            font-style: italic;
+            color: #666666;
+        }
+
+        .difficult-remove-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            transition: all 0.2s ease-in-out;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            border-radius: 6px;
+            color: #94A3B8;
+        }
+
+        .difficult-remove-btn:hover {
+            background-color: #F1F5F9;
+            color: #475569;
+            transform: scale(1.05);
+        }
+
+        .difficult-remove-btn:active {
+            transform: scale(0.95);
+            color: #1F2937;
+        }
+
+        .difficult-remove-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.6;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: stroke 0.2s ease-in-out;
+        }
+
+        .difficult-remove-btn:hover svg {
+            stroke: currentColor;
+        }
+
+        /* ========== 播放按钮样式 ========== */
+        .play-audio-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            border-radius: 6px;
+            color: #94A3B8;
+            transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
+        }
+
+        .play-audio-btn:hover {
+            background-color: #F1F5F9;
+            color: #475569;
+            transform: scale(1.05);
+        }
+
+        .play-audio-btn:active {
+            transform: scale(0.95);
+            color: #1F2937;
+        }
+
+        .play-audio-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.6;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: stroke 0.2s ease-in-out, fill 0.2s ease-in-out;
+        }
+
+        .play-audio-btn:hover svg {
+            stroke: currentColor;
+        }
+
+        .empty-words-message {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999999;
+        }
+
+        .empty-words-message p {
+            margin: 10px 0;
+            font-size: 1rem;
+        }
+
+        /* ========== 响应式设计 ========== */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .difficult-words-section {
+                padding: 20px;
+            }
+
+            .difficult-words-table th,
+            .difficult-words-table td {
+                padding: 8px;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* ========== 搜索框样式 ========== */
+        .search-container {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            pointer-events: none;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 45px 12px 45px;
+            font-size: 1rem;
+            border: 2px solid #e5e5e5;
+            border-radius: 10px;
+            background-color: #ffffff;
+            transition: all 0.2s ease-in-out;
+            box-sizing: border-box;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #2e9eb7;
+            box-shadow: 0 0 0 3px rgba(46, 158, 183, 0.1);
+        }
+
+        .clear-search-btn {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #999999;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .clear-search-btn:hover {
+            background-color: #f0f0f0;
+            color: #666666;
+        }
+
+        .search-result-info {
+            padding: 10px 15px;
+            background-color: #f0f7ff;
+            border-left: 3px solid #2e9eb7;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            color: #555555;
+        }
+
+        .search-result-info strong {
+            color: #2e9eb7;
+        }
+
+        /* ========== 标签页样式（统一视觉规范） ========== */
+        .tabs-container {
+            margin-top: 50px;
+            margin-bottom: 0;
+        }
+
+        .tabs-header {
+            display: flex;
+            gap: 0;
+            border-bottom: 2px solid #e5e5e5;
+            margin-bottom: 20px;
+            background-color: transparent;
+            padding: 0;
+        }
+
+        .tab-button {
+            padding: 14px 32px;
+            background: transparent;
+            border: none;
+            border-bottom: 4px solid transparent;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #999999;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            position: relative;
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+
+        .tab-button:hover {
+            color: #666666;
+            background-color: rgba(52, 116, 116, 0.03);
+        }
+
+        .tab-button.active {
+            color: #333333;
+            border-bottom-color: #347474;
+            font-weight: 600;
+            background-color: transparent;
+        }
+
+        .tab-content {
+            display: none;
+            background-color: transparent;
+            padding: 0;
+            margin-top: 0;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* ========== 复习总览样式（现代科技感风格） ========== */
+
+        .review-overview-section {
+            background-color: transparent;
+            padding: 0;
+            margin-bottom: 0;
+            animation: fadeIn 0.6s ease-out;
+            font-family: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* 顶部区域 */
+        .review-overview-header {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        @media (min-width: 640px) {
+            .review-overview-header {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+            }
+        }
+
+        .review-overview-header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .review-overview-title {
+            font-size: 1.5rem; /* 24px */
+            font-weight: 600;
+            color: var(--color-text-strong);
+            margin: 0;
+            letter-spacing: -0.02em;
+        }
+
+        .today-review-badge {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, rgba(47, 158, 185, 0.12) 0%, rgba(47, 158, 185, 0.08) 100%);
+            color: #2F9EB9;
+            border-radius: 20px;
+            font-size: 0.875rem; /* 14px */
+            font-weight: 500;
+            border: 1px solid rgba(47, 158, 185, 0.2);
+        }
+
+        .view-words-list-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #2F9EB9 0%, #1E8BA8 100%);
+            color: #ffffff;
+            border-radius: 12px;
+            font-size: 0.875rem; /* 14px */
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(47, 158, 185, 0.2);
+        }
+
+        .view-words-list-btn:hover {
+            background: linear-gradient(135deg, #1E8BA8 0%, #2F9EB9 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(47, 158, 185, 0.3);
+        }
+
+        .view-words-list-btn:active {
+            transform: translateY(0);
+        }
+
+        .view-words-list-btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(47, 158, 185, 0.2);
+        }
+
+        /* 响应式网格布局 */
+        .review-overview-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        @media (min-width: 1024px) {
+            .review-overview-grid {
+                grid-template-columns: 70% 30%;
+                gap: 24px;
+            }
+        }
+
+        .review-overview-main {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        @media (min-width: 1024px) {
+            .review-overview-main {
+                gap: 24px;
+            }
+        }
+
+        .overview-grid {
+            display: grid;
+            gap: 24px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        }
+
+        .overview-card-span-2 {
+            grid-column: span 2;
+        }
+
+        @media (max-width: 768px) {
+            .overview-card-span-2 {
+                grid-column: span 1;
+            }
+        }
+
+        /* 统一卡片样式 */
+        .chart-card {
+            background: #FFFFFF;
+            border-radius: 24px;
+            box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+            padding: 28px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: slideUp 0.5s ease-out;
+            animation-fill-mode: both;
+            border: 1px solid rgba(148, 163, 184, 0.12);
+        }
+
+        .chart-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .chart-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .chart-card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chart-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(0, 0, 0, 0.06);
+        }
+
+        .chart-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .chart-card-title-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chart-icon {
+            width: 22px;
+            height: 22px;
+            color: #2F9EB9;
+            opacity: 0.8;
+        }
+
+        .chart-card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1E293B;
+            margin: 0;
+            letter-spacing: -0.01em;
+        }
+
+        .chart-subtext {
+            font-size: 0.8rem;
+            color: #94A3B8;
+            font-style: italic;
+        }
+
+        .chart-card-content {
+            position: relative;
+        }
+
+        /* 图表容器 */
+        .chart-container {
+            margin-bottom: 0;
+            position: relative;
+            height: 320px;
+            width: 100%;
+        }
+
+        .chart-container canvas {
+            max-width: 100% !important;
+            height: auto !important;
+        }
+
+        /* 右侧卡片 - 带轻微灰蓝背景渐变 */
+        /* 热力图样式 */
+        .calendar-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .calendar-title-block {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .calendar-subtitle {
+            margin: 0;
+            font-size: 13px;
+            color: #94A3B8;
+            letter-spacing: -0.01em;
+        }
+
+        .calendar-range-toggle-group {
+            display: inline-flex;
+            gap: 8px;
+            background: rgba(241, 245, 249, 0.85);
+            padding: 4px;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.35);
+        }
+
+        .calendar-range-btn {
+            border: none;
+            background: transparent;
+            color: #60808D;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Inter', 'Noto Sans SC', sans-serif;
+        }
+
+        .calendar-range-btn:hover {
+            background: rgba(47, 158, 185, 0.12);
+            color: #2F9EB9;
+        }
+
+        .calendar-range-btn.active {
+            background: linear-gradient(135deg, #2F9EB9 0%, #1E8BA8 100%);
+            color: #FFFFFF;
+            box-shadow: 0 6px 18px rgba(47, 158, 185, 0.25);
+        }
+
+        .heatmap-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .heatmap-main {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .heatmap-week-header {
+            display: grid;
+            grid-template-columns: repeat(7, 24px);
+            gap: 6px;
+            padding-left: 2px;
+        }
+
+        .heatmap-week-header-label {
+            font-size: 12px;
+            color: #A1A8B3;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .heatmap-weeks {
+            display: none;
+        }
+
+        .heatmap-quarter {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-top: 8px;
+            max-width: 100%;
+        }
+
+        .heatmap-month {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+        }
+
+        .heatmap-month-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 20px);
+            grid-template-rows: repeat(6, 20px);
+            gap: 4px;
+            width: fit-content;
+        }
+
+        .heatmap-month-title {
+            font-size: 0.95rem;
+            color: #8F9AA8;
+            letter-spacing: 0.08em;
+            text-align: center;
+            margin-top: 4px;
+        }
+
+        .heatmap-grid {
+            display: contents;
+        }
+
+        .heatmap-cell {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .heatmap-month-grid .heatmap-cell {
+            width: 20px;
+            height: 20px;
+        }
+
+        .heatmap-cell-clickable {
+            cursor: pointer;
+        }
+
+        .heatmap-placeholder {
+            background-color: transparent;
+        }
+
+        .heatmap-cell-clickable:hover {
+            transform: scale(1.08);
+            z-index: 10;
+            box-shadow: 0 6px 18px rgba(46, 125, 50, 0.28);
+            border: 2px solid rgba(46, 125, 50, 0.35);
+        }
+
+        .heatmap-cell-clickable:focus {
+            outline: 2px solid rgba(46, 125, 50, 0.9);
+            outline-offset: 2px;
+        }
+
+        .heatmap-cell.level-0 {
+            background-color: rgba(148, 163, 184, 0.18);
+        }
+
+        .heatmap-cell.level-lite {
+            background-color: #E8F5E9;
+        }
+
+        .heatmap-cell.level-1 {
+            background-color: #C8E6C9;
+        }
+
+        .heatmap-cell.level-2 {
+            background-color: #A5D6A7;
+        }
+
+        .heatmap-cell.level-3 {
+            background-color: #2E7D32;
+        }
+
+        .heatmap-week-labels {
+            display: grid;
+            grid-template-columns: 30px repeat(7, 1fr);
+            gap: 4px;
+            margin-bottom: 4px;
+        }
+
+        .heatmap-week-label {
+            font-size: 0.75rem;
+            color: #999999;
+            text-align: center;
+            padding-top: 4px;
+        }
+
+        .heatmap-day-labels {
+            display: none; /* 隐藏垂直星期标签 */
+        }
+
+        .heatmap-day-label {
+            font-size: 0.75rem;
+            color: #999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px 0;
+        }
+
+        /* 学习总结卡片 - 新视觉 */
+        .summary-card {
+            background: #FFFFFF;
+            border-radius: 24px;
+            box-shadow: 0 16px 40px rgba(148, 163, 184, 0.25);
+            padding: 32px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: slideUp 0.5s ease-out;
+            animation-fill-mode: both;
+            border: 1px solid rgba(148, 163, 184, 0.12);
+        }
+
+        .summary-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 24px 56px rgba(30, 41, 59, 0.18);
+        }
+
+        .summary-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .summary-card-title {
+            margin: 0;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1E293B;
+            letter-spacing: -0.01em;
+        }
+
+        .summary-card-subtitle {
+            margin: 4px 0 0 0;
+            font-size: 0.875rem;
+            color: #64748B;
+        }
+
+        .summary-card-chip {
+            background: rgba(90, 159, 184, 0.15);
+            color: #5A9FB8;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 999px;
+            padding: 6px 12px;
+            letter-spacing: 0.05em;
+        }
+
+        .summary-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 18px;
+            margin-bottom: 20px;
+        }
+
+        .summary-metric {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .summary-label {
+            font-size: 0.85rem;
+            color: #64748B;
+            font-weight: 500;
+            letter-spacing: 0.01em;
+        }
+
+        .summary-value {
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: var(--color-text-strong);
+            letter-spacing: -0.01em;
+        }
+
+        .summary-value-row {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+        }
+
+        .summary-value-primary {
+            color: var(--color-text-strong);
+            font-weight: 600;
+        }
+
+        .summary-value-accent {
+            color: var(--color-text-strong);
+            font-weight: 600;
+        }
+
+        .summary-delta {
+            font-size: 0.8125rem;
+            color: #10B981;
+            font-weight: 600;
+        }
+
+        .summary-progress {
+            margin-top: 12px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(148, 163, 184, 0.25);
+        }
+
+        .summary-progress-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .summary-progress-label {
+            font-size: 0.8125rem;
+            color: #64748B;
+            font-weight: 500;
+        }
+
+        .summary-progress-percent {
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: #2F9EB9;
+        }
+
+        .summary-progress-bar {
+            width: 100%;
+            height: 12px;
+            background-color: #E2E8F0;
+            border-radius: 9999px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .summary-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #2F9EB9 0%, #63B2B2 100%);
+            border-radius: 9999px;
+            transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 8px rgba(47, 158, 185, 0.25);
+        }
+
+        .summary-hint {
+            margin-top: 10px;
+            font-size: 0.75rem;
+            color: #64748B;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .overview-footer-note {
+            margin-top: 24px;
+            text-align: center;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #1E293B;
+            background: linear-gradient(135deg, rgba(47, 158, 185, 0.08), rgba(99, 178, 178, 0.08));
+            padding: 18px 24px;
+            border-radius: 20px;
+            letter-spacing: 0.02em;
+        }
+
+        .card-footnote {
+            margin-top: 18px;
+            font-size: 0.85rem;
+            color: #64748B;
+            font-style: italic;
+        }
+
+        .future-card {
+            position: relative;
+        }
+
+        .mastery-card .chart-subtext {
+            font-size: 0.8rem;
+            color: #94A3B8;
+            font-style: italic;
+        }
+
+        .mastery-footer {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 18px;
+        }
+
+        .mastery-footer .chart-subtext {
+            font-size: 0.85rem;
+            color: #64748B;
+            font-style: italic;
+            margin: 0;
+        }
+
+        .mastery-footer .card-footnote {
+            margin: 0;
+        }
+
+        /* 移动端优化 */
+        @media (max-width: 640px) {
+            .review-overview-title {
+                font-size: 1.5rem;
+            }
+
+            .chart-card {
+                padding: 16px;
+            }
+
+            .chart-card-title {
+                font-size: 1rem;
+            }
+
+            .chart-container {
+                height: 250px;
+            }
+        }
+
+        .heatmap-main {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            width: fit-content;
+        }
+
+        /* 每日复习 Modal 样式 */
+        .daily-review-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .daily-review-modal-overlay.daily-review-modal-show {
+            opacity: 1;
+        }
+
+        .daily-review-modal-content {
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+            max-width: 600px;
+            width: 100%;
+            max-height: 80vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transform: scale(0.9);
+            transition: transform 0.2s ease;
+        }
+
+        .daily-review-modal-overlay.daily-review-modal-show .daily-review-modal-content {
+            transform: scale(1);
+        }
+
+        .daily-review-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 24px;
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        .daily-review-modal-header h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1F2937;
+            margin: 0;
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+
+        .daily-review-modal-close {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            color: #9CA3AF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .daily-review-modal-close:hover {
+            background-color: #F3F4F6;
+            color: #6B7280;
+        }
+
+        .daily-review-modal-close svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .daily-review-modal-body {
+            padding: 24px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .daily-review-empty {
+            text-align: center;
+            color: #9CA3AF;
+            padding: 40px 20px;
+        }
+
+        .daily-review-word-item {
+            padding: 16px;
+            background-color: #F9FAFB;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .daily-review-word-item:hover {
+            background-color: #F3F4F6;
+        }
+
+        .daily-review-word-main {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .daily-review-word-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .daily-review-word-text {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1F2937;
+        }
+
+        .daily-review-word-phonetic {
+            font-size: 0.875rem;
+            color: #6B7280;
+        }
+
+        .daily-review-word-meaning {
+            font-size: 0.9375rem;
+            color: #374151;
+            margin: 0;
+        }
+
+        .daily-review-word-source {
+            font-size: 0.8125rem;
+            color: #9CA3AF;
+            margin: 0;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .tab-button {
+                padding: 10px 16px;
+                font-size: 0.9rem;
+            }
+
+            .chart-container {
+                height: 250px;
+            }
+
+            .review-overview-section {
+                padding: 20px;
+            }
+
+            .heatmap-grid {
+                gap: 3px;
+            }
+
+            .heatmap-cell {
+                border-radius: 2px;
+            }
+        }
+
+        /* ========== 复习模式样式 ========== */
+        .review-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .review-btn-primary {
+            background-color: #2e9eb7;
+            color: #ffffff;
+        }
+
+        .review-btn-primary:hover {
+            background-color: #2189a8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(46, 158, 183, 0.3);
+        }
+
+        .review-btn-secondary {
+            background-color: #f5f5f5;
+            color: #333333;
+            border: 2px solid #2e9eb7;
+        }
+
+        .review-btn-unified {
+            background-color: #347474;
+            color: #ffffff;
+        }
+
+        .review-btn-unified:hover {
+            background-color: #2a5f5f;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(52, 116, 116, 0.2);
+        }
+
+        .review-btn-unified:active {
+            transform: translateY(0);
+        }
+
+        .review-buttons-group {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .review-btn-secondary:hover {
+            background-color: #2e9eb7;
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(46, 158, 183, 0.3);
+        }
+
+        .review-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .review-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .review-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .review-header {
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 30px 0;
+            background: transparent;
+        }
+
+        .review-header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 12px;
+        }
+
+        /* 可视化进度条 */
+        .review-progress-bar-container {
+            width: 100%;
+            height: 3px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .review-progress-bar {
+            height: 100%;
+            background-color: #FFFFFF;
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        .review-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .review-progress-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #FFFFFF;
+        }
+
+        .review-close-btn {
+            background: none;
+            border: none;
+            color: #FFFFFF;
+            font-size: 1.8rem;
+            cursor: pointer;
+            padding: 0;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .review-close-btn:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: #FFFFFF;
+        }
+
+        .review-undo-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            background-color: rgba(255, 193, 7, 0.2);
+            color: #FFC107;
+            border: 1px solid rgba(255, 193, 7, 0.4);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            margin: 0 8px;
+        }
+
+        .review-undo-btn:hover {
+            background-color: rgba(255, 193, 7, 0.3);
+            border-color: rgba(255, 193, 7, 0.6);
+            color: #FFC107;
+        }
+
+        .review-undo-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .review-nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            background-color: rgba(255, 255, 255, 0.15);
+            color: #FFFFFF;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .review-nav-btn:hover {
+            background-color: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.5);
+            color: #FFFFFF;
+        }
+
+        .review-nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .review-nav-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* 单词卡片容器（滑动切换） */
+        .word-card-wrapper {
+            width: 100%;
+            max-width: 600px;
+            height: 100%;
+            max-height: 70vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .word-card-slider {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .word-card {
+            width: 100%;
+            flex-shrink: 0;
+            height: 100%;
+            max-height: 70vh;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .word-card-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .card-front-section {
+            width: 100%;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .card-back-section {
+            width: 100%;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 0;
+            padding-top: 0;
+            border-top: none;
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.5s ease-in-out;
+        }
+
+        .word-card.expanded .card-back-section {
+            opacity: 1;
+            max-height: 500px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #e8e8e8;
+        }
+
+        .card-word {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2e9eb7;
+            margin-bottom: 15px;
+        }
+
+        .card-phonetic {
+            font-size: 1.2rem;
+            color: #999999;
+            font-style: italic;
+            margin-bottom: 40px;
+        }
+
+        .card-flip-btn {
+            margin-top: 35px;
+            width: 100%;
+            padding: 12px 20px;
+            background-color: #347474;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .card-flip-btn:hover {
+            background-color: #2a5f5f;
+            transform: translateY(-1px);
+        }
+
+        .card-flip-btn:active {
+            transform: translateY(0);
+        }
+
+        .card-hint {
+            font-size: 0.95rem;
+            color: #999999;
+            margin-top: 20px;
+        }
+
+        .card-meaning {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #333333;
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+
+        .card-play-btn {
+            background: none;
+            border: none;
+            border-radius: 12px;
+            padding: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #94A3B8;
+            transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
+            margin: 25px auto;
+        }
+
+        .card-play-btn:hover {
+            background-color: #F1F5F9;
+            color: #475569;
+            transform: scale(1.05);
+        }
+
+        .card-play-btn:hover svg {
+            stroke: currentColor;
+        }
+
+        .card-play-btn svg {
+            width: 24px;
+            height: 24px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.6;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: stroke 0.2s ease-in-out, fill 0.2s ease-in-out;
+        }
+
+        .card-source {
+            font-size: 1rem;
+            color: #999999;
+            margin-top: 30px;
+        }
+
+        .card-source a {
+            color: #2e9eb7;
+            text-decoration: none;
+            transition: all 0.2s ease-in-out;
+            border-bottom: 1px dashed #2e9eb7;
+        }
+
+        .card-source a:hover {
+            color: #2189a8;
+            border-bottom-style: solid;
+        }
+
+        /* 掌握度按钮区域（集成在卡片内部） */
+        .card-mastery-section {
+            width: 100%;
+            padding: 24px 30px;
+            background: #ffffff;
+            border-top: 2px solid #e8e8e8;
+            flex-shrink: 0;
+            box-sizing: border-box;
+        }
+
+        .mastery-section-title {
+            font-size: 1rem;
+            color: #666666;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .card-mastery-actions {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .mastery-btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .mastery-hard {
+            background-color: #F8D7DA;
+            color: #721C24;
+        }
+
+        .mastery-hard:hover {
+            background-color: #F5C2C7;
+            color: #721C24;
+        }
+
+        .mastery-learning {
+            background-color: #FFF3CD;
+            color: #856404;
+        }
+
+        .mastery-learning:hover {
+            background-color: #FFECB5;
+            color: #856404;
+        }
+
+        .mastery-mastered {
+            background-color: #D4EDDA;
+            color: #155724;
+        }
+
+        .mastery-mastered:hover {
+            background-color: #C3E6CB;
+            color: #155724;
+        }
+
+        /* 掌握度标记样式 */
+        .mastery-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #999999;
+            background-color: #f5f5f5;
+        }
+
+        .mastery-badge-mastered {
+            color: #7B9F7E;
+            background-color: #E8F2E9;
+        }
+
+        .mastery-badge-learning {
+            color: #C8A083;
+            background-color: #F7EDE5;
+        }
+
+        .mastery-badge-hard {
+            color: #B88888;
+            background-color: #F2E8E8;
+        }
+
+        /* 复习时间信息样式 */
+        .review-time-info {
+            font-size: 0.85rem;
+            color: #999999;
+            font-weight: normal;
+        }
+
+        /* 自动降级警告图标样式 */
+        .auto-downgrade-warning {
+            display: inline-block;
+            margin-left: 6px;
+            font-size: 0.9rem;
+            color: #ff6b6b;
+            cursor: help;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .review-header {
+                padding: 15px 20px 0;
+            }
+
+            .review-content {
+                padding: 20px 15px;
+            }
+
+            .word-card-wrapper {
+                max-width: 100%;
+                max-height: 75vh;
+            }
+
+            .word-card-content {
+                padding: 20px;
+            }
+
+            .card-word {
+                font-size: 2.2rem;
+            }
+
+            .card-phonetic {
+                font-size: 1.1rem;
+            }
+
+            .card-meaning {
+                font-size: 1.1rem;
+            }
+
+            .card-play-btn {
+                width: 50px;
+                height: 50px;
+            }
+
+            .card-mastery-section {
+                padding: 20px 25px;
+            }
+
+            .mastery-btn {
+                padding: 14px 16px;
+                font-size: 0.95rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .review-header {
+                padding: 12px 15px 0;
+            }
+
+            .review-progress-text {
+                font-size: 1rem;
+            }
+
+            .review-content {
+                padding: 15px 10px;
+            }
+
+            .word-card-wrapper {
+                max-height: 80vh;
+            }
+
+            .word-card-content {
+                padding: 16px;
+            }
+
+            .card-word {
+                font-size: 2rem;
+            }
+
+            .card-phonetic {
+                font-size: 1rem;
+                margin-bottom: 30px;
+            }
+
+            .card-meaning {
+                font-size: 1.1rem;
+            }
+
+            .card-flip-btn {
+                padding: 12px 24px;
+                font-size: 0.95rem;
+            }
+
+            .card-mastery-section {
+                padding: 16px 20px;
+            }
+
+            .card-mastery-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .mastery-btn {
+                width: 100%;
+                padding: 14px;
+            }
+        }
+
+        .future-bar-tooltip {
+            position: fixed;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 9999;
+            transition: opacity 0.12s ease;
+        }
+
+        .future-bar-tooltip-content {
+            font-size: 12px;
+            font-weight: 600;
+            color: #94A3B8;
+            background: transparent;
+            padding: 0;
+            line-height: 1;
+            text-align: center;
+            font-family: 'Inter', 'Noto Sans SC', sans-serif;
+        }
+
+    .heatmap-tooltip {
+        position: fixed;
+        opacity: 0;
+        pointer-events: none;
+        background: rgba(15, 23, 42, 0.92);
+        color: #F8FAFC;
+        padding: 10px 12px;
+        border-radius: 12px;
+        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.25);
+        transition: opacity 0.12s ease;
+        z-index: 10000;
+        min-width: 120px;
+    }
+
+    .heatmap-tooltip-date {
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 2px;
+        color: #F1F5F9;
+    }
+
+    .heatmap-tooltip-count {
+        font-size: 12px;
+        color: #E2E8F0;
+    }
+
+    /* ===== 版权页脚样式 ===== */
+    .site-footer {
+        text-align: center;
+        padding: 2rem 1rem;
+        margin-top: 2rem; /* 确保和页面内容有一定间距 */
+        border-top: 1px solid #eee; /* 一条细微的分割线 */
+    }
+    .site-footer p {
+        margin: 0;
+        font-size: 0.85em; /* 字体小一点 */
+        color: #999; /* 颜色淡一点，不抢眼 */
+    }
+    </style>
+    <script type="module" src="/src/js/main.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- ========== 顶部导航栏 ========== -->
+        <nav class="top-navigation">
+            <a href="index.html" class="nav-link">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/>
+                </svg>
+                故事列表
+            </a>
+            <span class="nav-link" style="color: #347474; cursor: default; background-color: transparent;">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2zm0 15l-5-2.18L7 18V5h10v13z"/>
+                </svg>
+                我的生词本
+            </span>
+            <a href="stats.html" class="nav-link">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 3v18h18v-2H5V3H3zm4 12h2v4H7v-4zm4-4h2v8h-2v-8zm4-4h2v12h-2V7z"/>
+                </svg>
+                学习统计
+            </a>
+            <a href="settings.html" class="nav-link">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09A1.65 1.65 0 0 0 15 4.6a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9c.34.27.76.42 1.2.42H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                设置
+            </a>
+            <a href="guide.html" class="nav-link">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1.8"/>
+                    <line x1="12" y1="16" x2="12" y2="12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                    <circle cx="12" cy="8" r="1" fill="currentColor"/>
+                </svg>
+                使用说明
+            </a>
+        </nav>
+
+        <!-- ========== 页面标题 ========== -->
+        <h1>我的生词本</h1>
+        <p class="subtitle">收藏的生词集中管理</p>
+
+        <!-- ========== 标签页容器 ========== -->
+        <div class="tabs-container">
+            <div class="tabs-header">
+                <button class="tab-button active" onclick="switchTab('words-list')">我的生词本</button>
+                <button class="tab-button" onclick="switchTab('review-overview')">复习总览</button>
+            </div>
+
+            <!-- ========== 标签页1: 我的生词本 ========== -->
+            <div id="tab-words-list" class="tab-content active">
+                <!-- ========== 搜索框 ========== -->
+                <div class="search-container">
+                    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="#666666" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    <input type="text" id="words-search-input" class="search-input" placeholder="搜索单词、释义或来源故事...">
+                    <button id="words-clear-search-btn" class="clear-search-btn" style="display: none;">✕</button>
+                </div>
+
+                <!-- ========== 搜索结果提示 ========== -->
+                <div id="words-search-result-info" class="search-result-info" style="display: none;"></div>
+
+                <!-- ========== 生词本内容 ========== -->
+                <div class="difficult-words-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+                <h2 class="chart-title" style="margin-bottom: 0;">我的生词本</h2>
+                <div class="review-buttons-group" style="display: flex; gap: 12px; align-items: center;">
+                    <button id="quick-review-btn" class="review-btn review-btn-unified" onclick="startQuickReview()">
+                        <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                        </svg>
+                        快速复习
+                    </button>
+                    <button id="priority-review-btn" class="review-btn review-btn-unified" onclick="startPriorityReview()">
+                        <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path>
+                        </svg>
+                        优先复习困难词
+                    </button>
+                </div>
+            </div>
+            <div id="difficult-words-list">
+                <!-- 动态生成 -->
+            </div>
+                </div>
+            </div>
+
+            <!-- ========== 标签页2: 复习总览 ========== -->
+            <div id="tab-review-overview" class="tab-content">
+                <div class="review-overview-section">
+                    <!-- 顶部：页面标题 + 今日进度 + 查看生词列表按钮 -->
+                    <div class="review-overview-header">
+                        <div class="review-overview-header-left">
+                            <h1 class="review-overview-title">复习总览</h1>
+                            <span id="today-review-badge" class="today-review-badge" style="display: none;">
+                                今日待复习 <span id="today-review-count">0</span> 个
+                            </span>
+                        </div>
+                        <a href="#words-list" class="view-words-list-btn" onclick="switchTab('words-list'); return false;">
+                            查看生词列表
+                        </a>
+                    </div>
+
+                    <!-- 主内容区域：学习概览栅格 -->
+                    <div class="overview-grid">
+                        <!-- 今日学习目标 SUMMARY -->
+                        <div class="summary-card overview-summary-card overview-card-span-2">
+                            <div class="summary-card-header">
+                                <div class="summary-card-heading">
+                                    <h3 class="summary-card-title">今日学习目标</h3>
+                                    <p class="summary-card-subtitle">保持节奏，离掌握更近一步</p>
+                                </div>
+                                <span class="summary-card-chip">TODAY</span>
+                            </div>
+                            <div class="summary-metrics">
+                                <div class="summary-metric">
+                                    <span class="summary-label">今日目标词数</span>
+                                    <span id="summary-target-count" class="summary-value summary-value-primary">0</span>
+                                </div>
+                                <div class="summary-metric">
+                                    <span class="summary-label">今日已完成</span>
+                                    <span id="summary-today-done" class="summary-value summary-value-accent">0</span>
+                                </div>
+                                <div class="summary-metric">
+                                    <span class="summary-label">掌握率</span>
+                                    <div class="summary-value-row">
+                                        <span id="summary-mastery-rate" class="summary-value summary-value-primary">0%</span>
+                                        <span id="summary-mastery-delta" class="summary-delta">较昨日 +0%</span>
+                                    </div>
+                                </div>
+                                <div class="summary-metric">
+                                    <span class="summary-label">总生词数</span>
+                                    <span id="summary-total" class="summary-value">0</span>
+                                </div>
+                            </div>
+                            <div id="summary-progress" class="summary-progress" style="display: none;">
+                                <div class="summary-progress-header">
+                                    <span class="summary-progress-label">完成进度</span>
+                                    <span id="summary-progress-percent" class="summary-progress-percent">0%</span>
+                                </div>
+                                <div class="summary-progress-bar">
+                                    <div id="summary-progress-fill" class="summary-progress-fill" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            <p id="summary-hint" class="summary-hint italic-hint">再背 0 个词就达成目标！</p>
+                        </div>
+
+                        <!-- 未来7天复习量 -->
+                        <div class="chart-card overview-card future-card">
+                            <div class="chart-card-header">
+                                <div class="chart-card-title-group">
+                                    <svg class="chart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                    </svg>
+                                    <h3 class="chart-card-title">未来7天复习量</h3>
+                                </div>
+                            </div>
+                            <div class="chart-card-content">
+                                <canvas id="future-review-bar-chart"></canvas>
+                            </div>
+                            <p id="future-trend-note" class="card-footnote">平均每日目标 0 个词 · 趋势平稳</p>
+                        </div>
+
+                        <!-- 生词掌握度 -->
+                        <div class="chart-card overview-card mastery-card">
+                            <div class="chart-card-header">
+                                <div class="chart-card-title-group">
+                                    <svg class="chart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 20.5C7.30558 20.5 3.5 16.6944 3.5 12C3.5 7.30558 7.30558 3.5 12 3.5C16.6944 3.5 20.5 7.30558 20.5 12C20.5 16.6944 16.6944 20.5 12 20.5Z" />
+                                    </svg>
+                                    <h3 class="chart-card-title">生词掌握度</h3>
+                                </div>
+                            </div>
+                            <div class="chart-card-content">
+                                <canvas id="mastery-pie-chart"></canvas>
+                            </div>
+                            <div class="mastery-footer">
+                                <span id="mastery-trend" class="chart-subtext">较上周提升 +0%</span>
+                                <p id="mastery-footnote" class="card-footnote">已掌握词数 0 个</p>
+                            </div>
+                        </div>
+
+                        <!-- 复习日历 -->
+                        <div class="chart-card calendar-card overview-card-span-2">
+                            <div class="chart-card-header calendar-card-header">
+                                <div class="calendar-title-block">
+                                    <div class="chart-card-title-group">
+                                        <svg class="chart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                        <h3 class="chart-card-title">复习日历</h3>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="chart-card-content">
+                                <div class="heatmap-wrapper">
+                                    <div id="review-heatmap" class="heatmap-main"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== 复习模式界面 ========== -->
+        <div id="review-overlay" class="review-overlay" style="display: none;">
+            <div class="review-container">
+                <!-- 复习进度 -->
+                <div class="review-header">
+                    <div class="review-header-top">
+                        <button class="review-close-btn" onclick="exitReview()">✕</button>
+                        <div class="review-progress-text">
+                            <span id="review-current">1</span> / <span id="review-total">10</span>
+                        </div>
+                    </div>
+                    <div class="review-progress-bar-container">
+                        <div id="review-progress-bar" class="review-progress-bar" style="width: 10%;"></div>
+                    </div>
+                    <div style="display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 8px;">
+                        <button id="prev-btn" class="review-nav-btn" onclick="goToPreviousOrUndo()" title="">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M15 18l-6-6 6-6"/>
+                            </svg>
+                            上一个
+                        </button>
+                        <button id="next-btn" class="review-nav-btn" onclick="goToNextCard()" title="下一个单词（跳转到下一个待复习的单词）">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 18l6-6-6-6"/>
+                            </svg>
+                            下一个
+                        </button>
+                    </div>
+                </div>
+
+                <div class="review-content">
+                    <!-- 单词卡片容器（支持滑动切换） -->
+                    <div class="word-card-wrapper">
+                        <div id="word-card-slider" class="word-card-slider">
+                            <!-- 卡片会动态插入到这里 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const COLOR_PRIMARY = '#63B2B2';
+        const COLOR_PRIMARY_LIGHT = 'rgba(99, 178, 178, 0.55)';
+        const COLOR_ACCENT = '#2F9EB9';
+        const COLOR_WARNING = '#F59E0B';
+        const COLOR_GRAY = '#E2E8F0';
+        const COLOR_TEXT_STRONG = '#0F172A';
+        const COLOR_TEXT_MUTED = '#64748B';
+        const COLOR_BORDER = '#E2E8F0';
+
+        /**
+         * 获取最佳英语语音（优先选择高质量语音，排除低质量语音）
+         * @returns {SpeechSynthesisVoice|null}
+         */
+        function getBestEnglishVoice() {
+            if (!('speechSynthesis' in window)) {
+                return null;
+            }
+
+            const voices = window.speechSynthesis.getVoices();
+            if (voices.length === 0) {
+                return null;
+            }
+
+            // 筛选英语语音
+            const englishVoices = voices.filter(voice => voice.lang.startsWith('en'));
+
+            // 低质量语音黑名单（已知音质差的语音引擎）
+            const blacklist = ['Albert', 'Bad News', 'Bahh', 'Bells', 'Boing', 'Bubbles', 'Cellos', 'Deranged', 'Good News', 'Jester', 'Organ', 'Superstar', 'Trinoids', 'Whisper', 'Wobble', 'Zarvox'];
+            
+            // 过滤掉黑名单中的语音
+            const goodVoices = englishVoices.filter(voice => 
+                !blacklist.some(bad => voice.name.includes(bad))
+            );
+
+            // 如果过滤后没有可用语音，使用所有语音
+            const voicesToUse = goodVoices.length > 0 ? goodVoices : englishVoices;
+
+            // 高质量语音关键词（按优先级排序）
+            const premiumKeywords = ['Samantha', 'Alex', 'Karen', 'Moira', 'Tessa', 'Premium', 'Enhanced', 'Natural', 'Google', 'Microsoft'];
+
+            // 优先级 1：本地美式英语 + 高质量关键词
+            for (const keyword of premiumKeywords) {
+                const voice = voicesToUse.find(v => 
+                    v.localService && 
+                    v.lang.startsWith('en-US') && 
+                    v.name.includes(keyword)
+                );
+                if (voice) {
+                    console.log('找到高质量语音:', voice.name);
+                    return voice;
+                }
+            }
+
+            // 优先级 2：任何本地英语 + 高质量关键词
+            for (const keyword of premiumKeywords) {
+                const voice = voicesToUse.find(v => 
+                    v.localService && 
+                    v.name.includes(keyword)
+                );
+                if (voice) {
+                    console.log('找到高质量语音:', voice.name);
+                    return voice;
+                }
+            }
+
+            // 优先级 3：任何本地美式英语（已排除黑名单）
+            const localUSVoices = voicesToUse.filter(v => 
+                v.localService && 
+                v.lang.startsWith('en-US')
+            );
+            if (localUSVoices.length > 0) {
+                console.log('使用本地美式英语:', localUSVoices[0].name);
+                return localUSVoices[0];
+            }
+
+            // 优先级 4：任何本地英语（已排除黑名单）
+            const localVoices = voicesToUse.filter(v => v.localService);
+            if (localVoices.length > 0) {
+                console.log('使用本地英语:', localVoices[0].name);
+                return localVoices[0];
+            }
+
+            // 优先级 5：在线美式英语
+            const onlineUSVoices = voicesToUse.filter(v => v.lang.startsWith('en-US'));
+            if (onlineUSVoices.length > 0) {
+                console.log('使用在线美式英语:', onlineUSVoices[0].name);
+                return onlineUSVoices[0];
+            }
+
+            // 优先级 6：任何可用英语语音
+            console.log('使用任意英语语音:', voicesToUse[0]?.name);
+            return voicesToUse[0] || englishVoices[0] || null;
+        }
+
+        /**
+         * 使用 Web Speech API 朗读单词（改进版：彻底解决开头截断问题）
+         * @param {string} word - 要朗读的单词文本
+         */
+        function speakWord(word) {
+            // 检查浏览器是否支持 Web Speech API
+            if (!('speechSynthesis' in window)) {
+                console.warn('浏览器不支持 Web Speech API');
+                alert('您的浏览器不支持语音播放功能，请使用 Chrome、Safari 或 Edge 浏览器。');
+                return;
+            }
+
+            // 停止当前播放并等待
+            window.speechSynthesis.cancel();
+            
+            // 检查是否是首次播放（页面加载后的第一次点击）
+            if (!window.hasPlayedSpeech) {
+                console.log('🎙️ 首次语音播放，使用双重播放策略防止截断');
+                window.hasPlayedSpeech = true;
+                
+                // 等待cancel完全生效
+                setTimeout(() => {
+                    // 策略：先播放一个极短的预热音频，然后播放真实单词
+                    const warmupUtterance = new SpeechSynthesisUtterance('.');
+                    warmupUtterance.lang = 'en-US';
+                    warmupUtterance.rate = 10; // 极快
+                    warmupUtterance.volume = 0.01; // 几乎静音
+                    warmupUtterance.pitch = 1;
+                    
+                    const bestVoice = getBestEnglishVoice();
+                    if (bestVoice) {
+                        warmupUtterance.voice = bestVoice;
+                    }
+                    
+                    // 预热完成后播放真实单词
+                    warmupUtterance.onend = function() {
+                        console.log('预热完成，播放真实单词');
+                        setTimeout(() => {
+                            speakWordActual(word);
+                        }, 100);
+                    };
+                    
+                    warmupUtterance.onerror = function() {
+                        console.log('预热失败，直接播放');
+                        setTimeout(() => {
+                            speakWordActual(word);
+                        }, 150);
+                    };
+                    
+                    window.speechSynthesis.speak(warmupUtterance);
+                }, 100);
+            } else {
+                // 非首次播放，等待cancel生效后播放
+                setTimeout(() => {
+                    speakWordActual(word);
+                }, 50);
+            }
+        }
+        
+        /**
+         * 实际执行语音播放
+         * @param {string} word - 要播放的单词
+         */
+        function speakWordActual(word) {
+            const utterance = new SpeechSynthesisUtterance(word);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.85;
+            utterance.pitch = 1;
+            utterance.volume = 1;
+
+            const bestVoice = getBestEnglishVoice();
+            if (bestVoice) {
+                utterance.voice = bestVoice;
+                console.log('使用语音:', bestVoice.name);
+            }
+
+            utterance.onerror = function(event) {
+                console.error('语音播放出错:', event.error);
+            };
+            
+            utterance.onstart = function() {
+                console.log('开始播放:', word);
+            };
+            
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // 预加载语音列表并预热引擎
+        let speechEngineWarmedUp = false;
+        
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.getVoices();
+            window.speechSynthesis.onvoiceschanged = function() {
+                const voices = window.speechSynthesis.getVoices();
+                console.log('可用语音数:', voices.length);
+                
+                // 显示所有英语语音供调试
+                const englishVoices = voices.filter(v => v.lang.startsWith('en'));
+                console.log('英语语音:', englishVoices.map(v => 
+                    `${v.name} (${v.lang}, 本地:${v.localService})`
+                ));
+                
+                // 语音列表加载完成后，预热引擎
+                if (!speechEngineWarmedUp && voices.length > 0) {
+                    warmupSpeechEngine();
+                }
+            };
+            
+            // 如果语音列表已经可用，立即预热
+            setTimeout(() => {
+                const voices = window.speechSynthesis.getVoices();
+                if (voices.length > 0 && !speechEngineWarmedUp) {
+                    warmupSpeechEngine();
+                }
+            }, 500);
+        }
+
+        /**
+         * 预热语音引擎
+         * 通过播放一个极短的静音音频来初始化引擎，避免首次播放时开头被截断
+         */
+        function warmupSpeechEngine() {
+            if (speechEngineWarmedUp) return;
+            
+            try {
+                const warmup = new SpeechSynthesisUtterance('.');
+                warmup.lang = 'en-US';
+                warmup.volume = 0; // 静音
+                warmup.rate = 10; // 极快
+                warmup.pitch = 1;
+                
+                const bestVoice = getBestEnglishVoice();
+                if (bestVoice) {
+                    warmup.voice = bestVoice;
+                }
+                
+                warmup.onend = function() {
+                    speechEngineWarmedUp = true;
+                    console.log('语音引擎预热完成');
+                };
+                
+                warmup.onerror = function(event) {
+                    console.log('语音引擎预热（静默失败是正常的）:', event.error);
+                    speechEngineWarmedUp = true; // 即使失败也标记为完成
+                };
+                
+                window.speechSynthesis.speak(warmup);
+            } catch (error) {
+                console.log('语音引擎预热失败:', error);
+                speechEngineWarmedUp = true;
+            }
+        }
+
+        /**
+         * 生成扁平化状态图标SVG（使用stroke风格，更简洁）
+         * @param {string} type - 图标类型：'mastered' | 'learning' | 'hard'
+         * @param {string} color - 图标颜色（可选，默认根据类型，使用柔和的低对比度颜色）
+         * @returns {string} SVG HTML字符串
+         */
+        function getStatusIcon(type, color) {
+            let svgContent = '';
+            let defaultColor = '#999999'; // 默认灰色，低对比度
+            
+            if (type === 'mastered') {
+                defaultColor = '#6B9E78'; // 柔和的绿色（替代高对比度的#4CAF50）
+                svgContent = '<circle cx="12" cy="12" r="10" stroke="currentColor" fill="none"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>';
+            } else if (type === 'learning') {
+                defaultColor = '#B8866B'; // 柔和的棕色（替代高对比度的#FFA726）
+                svgContent = '<circle cx="12" cy="12" r="10" stroke="currentColor" fill="none"/><line x1="12" y1="8" x2="12" y2="12" stroke="currentColor" stroke-linecap="round"/><line x1="12" y1="16" x2="12.01" y2="16" stroke="currentColor" stroke-linecap="round"/>';
+            } else if (type === 'hard') {
+                defaultColor = '#C97D7D'; // 柔和的红色（替代高对比度的#F44336）
+                svgContent = '<circle cx="12" cy="12" r="10" stroke="currentColor" fill="none"/><line x1="15" y1="9" x2="9" y2="15" stroke="currentColor" stroke-linecap="round"/><line x1="9" y1="9" x2="15" y2="15" stroke="currentColor" stroke-linecap="round"/>';
+            }
+            
+            const iconColor = color || defaultColor;
+            return `<svg class="mastery-icon" viewBox="0 0 24 24" fill="none" stroke="${iconColor}" stroke-width="2" style="width: 20px; height: 20px; color: ${iconColor};">
+                ${svgContent}
+            </svg>`;
+        }
+        
+        /**
+         * 计算距离上次复习的天数
+         * @param {string} lastReviewed - ISO格式的日期字符串
+         * @returns {number} 天数，如果未复习过则返回null
+         */
+        function getDaysSinceReview(lastReviewed) {
+            if (!lastReviewed) return null;
+            const lastDate = new Date(lastReviewed);
+            const now = new Date();
+            const diffTime = Math.abs(now - lastDate);
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            return diffDays;
+        }
+
+        /**
+         * 格式化"X天前"文本
+         * @param {number} days - 天数
+         * @returns {string} 格式化后的文本
+         */
+        function formatDaysAgo(days) {
+            if (days === 0) return '今天';
+            if (days === 1) return '1天前';
+            return `${days}天前`;
+        }
+
+        /**
+         * 根据复习次数计算下次复习间隔（天）
+         * 实现艾宾浩斯遗忘曲线的间隔重复算法
+         * @param {number} reviewCount - 复习次数（0表示第一次掌握）
+         * @returns {number} 下次复习间隔天数
+         */
+        function getNextReviewInterval(reviewCount) {
+            // 间隔重复时间表：随着复习次数增加，间隔逐渐延长
+            const intervals = [1, 3, 7, 14, 30, 60, 90]; // 1天、3天、7天、14天、30天、60天、90天
+            
+            if (reviewCount < intervals.length) {
+                return intervals[reviewCount];
+            }
+            // 超过7次复习后，固定为90天
+            return 90;
+        }
+
+        /**
+         * 计算单词的到期日期和剩余天数
+         * @param {Object} word - 单词对象
+         * @returns {Object} { daysRemaining, dueDate, intervalDays, isOverdue }
+         */
+        function calculateReviewStatus(word) {
+            if (!word.lastReviewed || word.mastery !== 'mastered') {
+                return null;
+            }
+            
+            const reviewCount = word.reviewCount || 0;
+            const intervalDays = getNextReviewInterval(reviewCount);
+            const lastDate = new Date(word.lastReviewed);
+            const now = new Date();
+            const dueDate = new Date(lastDate);
+            dueDate.setDate(dueDate.getDate() + intervalDays);
+            
+            const diffTime = dueDate - now;
+            const daysRemaining = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            const isOverdue = daysRemaining <= 0;
+            
+            return {
+                daysRemaining,
+                dueDate,
+                intervalDays,
+                isOverdue,
+                reviewCount
+            };
+        }
+
+        /**
+         * 检查并自动降级过期的"已掌握"单词
+         * 基于间隔重复算法：根据复习次数决定下次复习时间
+         * 自动降级时对 reviewCount 进行轻微惩罚（减1）
+         * @returns {number} 被降级的单词数量
+         */
+        function checkAndDowngradeExpiredWords() {
+            const words = getDifficultWords();
+            let downgradedCount = 0;
+            let hasChanges = false;
+
+            words.forEach(word => {
+                if (word.mastery === 'mastered' && word.lastReviewed) {
+                    const status = calculateReviewStatus(word);
+                    if (status && status.isOverdue) {
+                        // 自动降级为"学习中"
+                        word.mastery = 'learning';
+                        
+                        // 轻微惩罚：reviewCount 减1（最小为0）
+                        const currentReviewCount = word.reviewCount || 0;
+                        word.reviewCount = Math.max(0, currentReviewCount - 1);
+                        
+                        downgradedCount++;
+                        hasChanges = true;
+                        console.log(`自动降级单词 "${word.word}": 已过期（预期间隔: ${status.intervalDays}天，复习次数: ${currentReviewCount} → ${word.reviewCount}）`);
+                    }
+                }
+            });
+
+            if (hasChanges) {
+                saveDifficultWords(words);
+                console.log(`共自动降级 ${downgradedCount} 个单词，并应用了轻微惩罚（reviewCount -1）`);
+            }
+
+            return downgradedCount;
+        }
+
+        /**
+         * 渲染生词本
+         * 从 localStorage 中获取所有收藏的单词并显示
+         */
+        function renderDifficultWords() {
+            const container = document.getElementById('difficult-words-list');
+            if (!container) return;
+            
+            const words = getDifficultWords();
+            
+            if (words.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-words-message">
+                        <p>生词本为空</p>
+                        <p style="font-size: 0.9rem; margin-top: 10px; color: #999999;">在故事页面的单词表中点击星标按钮即可收藏单词</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // 按添加时间倒序排列（最新的在前）
+            const sortedWords = [...words].sort((a, b) => {
+                return new Date(b.addedAt) - new Date(a.addedAt);
+            });
+            
+            let tableHTML = '<table class="difficult-words-table">';
+            tableHTML += '<thead><tr><th>单词</th><th>音标</th><th>释义</th><th>状态</th><th>下次复习</th><th>来源</th><th>操作</th></tr></thead>';
+            tableHTML += '<tbody>';
+            
+            sortedWords.forEach((word, index) => {
+                // 状态列：只显示图标（安静而强大）
+                let statusBadge = '';
+                let statusColor = ''; // 用于标记需复习的颜色
+                
+                if (word.mastery === 'mastered') {
+                    // 检查是否需要复习（红色）
+                    const status = calculateReviewStatus(word);
+                    if (status && status.isOverdue) {
+                        statusBadge = getStatusIcon('mastered', '#C97D7D') + '<span style="margin-left: 4px; font-size: 0.75rem; color: #999999;" title="已掌握，但需复习">需复习</span>';
+                    } else {
+                        statusBadge = getStatusIcon('mastered');
+                    }
+                } else if (word.mastery === 'learning') {
+                    // 检查是否应该被自动降级（通过计算判断）
+                    let isAutoDowngraded = false;
+                    if (word.lastReviewed && (word.reviewCount || 0) > 0) {
+                        const tempWord = { ...word, mastery: 'mastered' };
+                        const status = calculateReviewStatus(tempWord);
+                        if (status && status.isOverdue) {
+                            isAutoDowngraded = true;
+                        }
+                    }
+                    const title = isAutoDowngraded 
+                        ? `学习中（该单词因超过${calculateReviewStatus({...word, mastery: 'mastered'})?.intervalDays || 0}天未复习已自动降级）`
+                        : '学习中';
+                    statusBadge = isAutoDowngraded 
+                        ? getStatusIcon('learning', '#C97D7D') + '<span style="margin-left: 4px; font-size: 0.75rem; color: #999999;">需复习</span>'
+                        : getStatusIcon('learning');
+                } else if (word.mastery === 'hard') {
+                    statusBadge = getStatusIcon('hard');
+                } else {
+                    statusBadge = '<span style="width: 20px; height: 20px; display: inline-block; color: #999999;" title="未标记">-</span>';
+                }
+                
+                // 下次复习列：只显示日期/倒计时，鼠标悬停显示上次复习日期
+                let nextReviewCell = '';
+                let lastReviewedText = '';
+                
+                if (word.mastery === 'mastered' && word.lastReviewed) {
+                    const status = calculateReviewStatus(word);
+                    if (status) {
+                        const days = getDaysSinceReview(word.lastReviewed);
+                        lastReviewedText = `上次复习: ${formatDaysAgo(days)}`;
+                        
+                        // 安静地显示倒计时（去掉红色警告文字）
+                        if (status.daysRemaining <= 0) {
+                            nextReviewCell = `<span class="review-time-info" title="${lastReviewedText}">今天</span>`;
+                        } else if (status.daysRemaining === 1) {
+                            nextReviewCell = `<span class="review-time-info" title="${lastReviewedText}">明天</span>`;
+                        } else if (status.daysRemaining <= 7) {
+                            nextReviewCell = `<span class="review-time-info" title="${lastReviewedText}">${status.daysRemaining}天后</span>`;
+                        } else {
+                            // 计算具体日期
+                            const dueDate = new Date(word.lastReviewed);
+                            dueDate.setDate(dueDate.getDate() + status.intervalDays);
+                            const dateStr = `${dueDate.getMonth() + 1}/${dueDate.getDate()}`;
+                            nextReviewCell = `<span class="review-time-info" title="${lastReviewedText}">${dateStr}</span>`;
+                        }
+                    } else {
+                        nextReviewCell = '<span class="review-time-info">-</span>';
+                    }
+                } else {
+                    // 非"已掌握"状态，显示"-"
+                    nextReviewCell = '<span class="review-time-info">-</span>';
+                }
+                
+                tableHTML += '<tr>';
+                tableHTML += `<td class="difficult-word-cell">${word.word}</td>`;
+                tableHTML += `<td class="difficult-phonetic-cell">${word.phonetic || '-'}</td>`;
+                tableHTML += `<td>${word.meaning}</td>`;
+                tableHTML += `<td>${statusBadge}</td>`;
+                tableHTML += `<td>${nextReviewCell}</td>`;
+                // 显示来源故事（如果有）- 字体改小
+                const sourceText = word.storyId ? `<a href="story.html?id=${word.storyId}" style="color: #2e9eb7; text-decoration: none; font-size: 0.85rem;">${word.storyId}</a>` : '-';
+                tableHTML += `<td>${sourceText}</td>`;
+                // 操作列：直接显示发音和删除图标按钮
+                tableHTML += `<td class="action-cell" style="display: flex; gap: 8px; align-items: center;">
+                    <button class="play-audio-btn" onclick="playWordAudio('${word.word}', event)" title="播放发音">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5 9v6h3l4 4V5L8 9H5z"></path>
+                            <path d="M16 9.5a3.5 3.5 0 0 1 0 5"></path>
+                            <path d="M18.5 8a6 6 0 0 1 0 8"></path>
+                        </svg>
+                    </button>
+                    <button class="difficult-remove-btn" onclick="removeFromDifficultWords('${word.word}', '${word.meaning}', event)" title="移除">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        </svg>
+                    </button>
+                </td>`;
+                tableHTML += '</tr>';
+            });
+            
+            tableHTML += '</tbody></table>';
+            container.innerHTML = tableHTML;
+        }
+        
+        /**
+         * 切换Kebab菜单显示/隐藏
+         * @param {Event} event - 点击事件
+         * @param {number} index - 菜单索引
+         */
+        function toggleKebabMenu(event, index) {
+            event.stopPropagation(); // 阻止事件冒泡
+            
+            // 关闭所有其他菜单
+            document.querySelectorAll('.kebab-menu').forEach(menu => {
+                if (menu.id !== `kebab-menu-${index}`) {
+                    menu.style.display = 'none';
+                }
+            });
+            
+            // 切换当前菜单
+            const menu = document.getElementById(`kebab-menu-${index}`);
+            if (menu) {
+                const isVisible = menu.style.display === 'block';
+                menu.style.display = isVisible ? 'none' : 'block';
+            }
+        }
+        
+        /**
+         * 播放单词发音
+         * @param {string} word - 单词
+         * @param {Event} event - 点击事件
+         */
+        function playWordAudio(word, event) {
+            if (event) {
+                event.stopPropagation();
+            }
+            if (word) {
+                speakWord(word);
+            }
+        }
+        
+        /**
+         * 从生词本移除单词
+         * @param {string} word - 单词
+         * @param {string} meaning - 释义
+         * @param {Event} event - 点击事件
+         */
+        function removeFromDifficultWords(word, meaning, event) {
+            if (event) {
+                event.stopPropagation();
+            }
+            
+            if (confirm(`确定要从生词本中移除 "${word}" 吗？`)) {
+                removeDifficultWord(word, meaning);
+                renderDifficultWords(); // 重新渲染
+            }
+        }
+        
+        // 注意：已移除Kebab菜单，此代码不再需要，但保留以防将来需要
+
+        /**
+         * 初始化搜索功能
+         */
+        function initWordSearch() {
+            const searchInput = document.getElementById('words-search-input');
+            const clearSearchBtn = document.getElementById('words-clear-search-btn');
+            const searchResultInfo = document.getElementById('words-search-result-info');
+
+            searchInput.addEventListener('input', function(e) {
+                const keyword = e.target.value.trim();
+                
+                if (keyword) {
+                    clearSearchBtn.style.display = 'flex';
+                } else {
+                    clearSearchBtn.style.display = 'none';
+                }
+
+                filterWords(keyword);
+            });
+
+            clearSearchBtn.addEventListener('click', function() {
+                searchInput.value = '';
+                clearSearchBtn.style.display = 'none';
+                searchResultInfo.style.display = 'none';
+                renderDifficultWords();
+            });
+
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    filterWords(searchInput.value.trim());
+                }
+            });
+        }
+
+        /**
+         * 搜索过滤生词
+         */
+        function filterWords(keyword) {
+            const searchResultInfo = document.getElementById('words-search-result-info');
+            const allWords = getDifficultWords();
+
+            if (!keyword) {
+                renderDifficultWords();
+                searchResultInfo.style.display = 'none';
+                return;
+            }
+
+            const filteredWords = allWords.filter(item => {
+                const wordMatch = item.word.toLowerCase().includes(keyword.toLowerCase());
+                const meaningMatch = item.meaning.toLowerCase().includes(keyword.toLowerCase());
+                const sourceMatch = item.source && item.source.toLowerCase().includes(keyword.toLowerCase());
+                return wordMatch || meaningMatch || sourceMatch;
+            });
+
+            if (filteredWords.length > 0) {
+                searchResultInfo.innerHTML = `找到 <strong>${filteredWords.length}</strong> 个匹配结果`;
+                searchResultInfo.style.display = 'block';
+            } else {
+                searchResultInfo.innerHTML = `没有找到匹配 "<strong>${keyword}</strong>" 的生词`;
+                searchResultInfo.style.display = 'block';
+            }
+
+            renderFilteredWords(filteredWords);
+        }
+
+        /**
+         * 渲染过滤后的生词列表
+         */
+        function renderFilteredWords(words) {
+            const container = document.getElementById('difficult-words-list');
+            if (!container) return;
+
+            if (words.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-words-message">
+                        <p>没有匹配的生词</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // 生成表格 HTML（复用 renderDifficultWords 的逻辑）
+            let tableHTML = '<div class="difficult-words-table"><table>';
+            tableHTML += '<thead><tr><th>单词</th><th>音标</th><th>释义</th><th>状态</th><th>下次复习</th><th>来源</th><th>操作</th></tr></thead>';
+            tableHTML += '<tbody>';
+
+            words.forEach((item, index) => {
+                // 状态列：只显示图标（安静而强大）
+                let statusBadge = '';
+                let statusColor = '';
+                
+                if (item.mastery === 'mastered') {
+                    const status = calculateReviewStatus(item);
+                    if (status && status.isOverdue) {
+                        statusBadge = getStatusIcon('mastered', '#C97D7D') + '<span style="margin-left: 4px; font-size: 0.75rem; color: #999999;" title="已掌握，但需复习">需复习</span>';
+                    } else {
+                        statusBadge = getStatusIcon('mastered');
+                    }
+                } else if (item.mastery === 'learning') {
+                    let isAutoDowngraded = false;
+                    if (item.lastReviewed && (item.reviewCount || 0) > 0) {
+                        const tempWord = { ...item, mastery: 'mastered' };
+                        const status = calculateReviewStatus(tempWord);
+                        if (status && status.isOverdue) {
+                            isAutoDowngraded = true;
+                        }
+                    }
+                    statusBadge = isAutoDowngraded 
+                        ? getStatusIcon('learning', '#C97D7D') + '<span style="margin-left: 4px; font-size: 0.75rem; color: #999999;">需复习</span>'
+                        : getStatusIcon('learning');
+                } else if (item.mastery === 'hard') {
+                    statusBadge = getStatusIcon('hard');
+                } else {
+                    statusBadge = '<span style="width: 20px; height: 20px; display: inline-block; color: #999999;" title="未标记">-</span>';
+                }
+                
+                // 下次复习列：安静地显示倒计时
+                let nextReviewCell = '';
+                let lastReviewedText = '';
+                
+                if (item.mastery === 'mastered' && item.lastReviewed) {
+                    const status = calculateReviewStatus(item);
+                    if (status) {
+                        const days = getDaysSinceReview(item.lastReviewed);
+                        lastReviewedText = `上次复习: ${formatDaysAgo(days)}`;
+                        
+                        if (status.daysRemaining <= 0) {
+                            nextReviewCell = `<span class="review-time-info" title="${lastReviewedText}">今天</span>`;
+                        } else if (status.daysRemaining === 1) {
+                            nextReviewCell = `<span class="review-time-info" title="${lastReviewedText}">明天</span>`;
+                        } else if (status.daysRemaining <= 7) {
+                            nextReviewCell = `<span class="review-time-info" title="${lastReviewedText}">${status.daysRemaining}天后</span>`;
+                        } else {
+                            const dueDate = new Date(item.lastReviewed);
+                            dueDate.setDate(dueDate.getDate() + status.intervalDays);
+                            const dateStr = `${dueDate.getMonth() + 1}/${dueDate.getDate()}`;
+                            nextReviewCell = `<span class="review-time-info" title="${lastReviewedText}">${dateStr}</span>`;
+                        }
+                    } else {
+                        nextReviewCell = '<span class="review-time-info">-</span>';
+                    }
+                } else {
+                    nextReviewCell = '<span class="review-time-info">-</span>';
+                }
+                
+                tableHTML += '<tr>';
+                tableHTML += `<td style="font-weight: 600; color: #2e9eb7;">${item.word}</td>`;
+                tableHTML += `<td style="font-style: italic; color: #999999;">${item.phonetic || '-'}</td>`;
+                tableHTML += `<td>${item.meaning}</td>`;
+                tableHTML += `<td>${statusBadge}</td>`;
+                tableHTML += `<td>${nextReviewCell}</td>`;
+                // 显示来源故事（如果有）- 字体改小
+                const sourceTextFiltered = item.storyId ? `<a href="story.html?id=${item.storyId}" style="color: #2e9eb7; text-decoration: none; font-size: 0.85rem;">${item.storyId}</a>` : '-';
+                tableHTML += `<td>${sourceTextFiltered}</td>`;
+                // 操作列：直接显示发音和删除图标按钮
+                tableHTML += `<td class="action-cell" style="display: flex; gap: 8px; align-items: center;">
+                    <button class="play-audio-btn" onclick="playWordAudio('${item.word}', event)" title="播放发音">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5 9v6h3l4 4V5L8 9H5z"></path>
+                            <path d="M16 9.5a3.5 3.5 0 0 1 0 5"></path>
+                            <path d="M18.5 8a6 6 0 0 1 0 8"></path>
+                        </svg>
+                    </button>
+                    <button class="difficult-remove-btn" onclick="removeFromDifficultWords('${item.word}', '${item.meaning}', event)" title="移除">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        </svg>
+                    </button>
+                </td>`;
+                tableHTML += '</tr>';
+            });
+
+            tableHTML += '</tbody></table></div>';
+            container.innerHTML = tableHTML;
+
+        }
+
+        /* ========== 复习模式功能 ========== */
+        
+        let reviewWords = [];  // 当前复习的单词列表
+        let currentReviewIndex = 0;  // 当前复习到第几个
+        let currentWordData = null;  // 当前单词数据
+        let reviewHistory = [];  // 复习历史记录（用于撤销）
+        
+        /**
+         * 快速复习：随机抽取10-20个单词
+         */
+        function startQuickReview() {
+            const allWords = getDifficultWords();
+            
+            if (allWords.length === 0) {
+                alert('生词本为空，请先添加一些生词！');
+                return;
+            }
+            
+            // 随机打乱并抽取10-20个单词
+            const shuffled = [...allWords].sort(() => Math.random() - 0.5);
+            // 随机生成 10 到 20 之间的数量
+            const minCount = 10;
+            const maxCount = 20;
+            const count = Math.min(
+                Math.floor(Math.random() * (maxCount - minCount + 1)) + minCount,
+                allWords.length  // 不超过总生词数
+            );
+            reviewWords = shuffled.slice(0, count);
+            currentReviewIndex = 0;
+            reviewHistory = [];
+            
+            // 显示复习界面
+            const overlay = document.getElementById('review-overlay');
+            overlay.style.display = 'flex';
+            
+            // 重置撤销按钮
+            updatePrevButtonTooltip();
+            
+            // 显示第一个单词
+            showReviewCard(0);
+            
+            console.log('开始快速复习，共', reviewWords.length, '个单词');
+        }
+        
+        /**
+         * 优先复习困难词：只复习标记为"困难"和"学习中"的单词
+         * 按掌握度优先级排序：先"困难"，再"学习中"，最后是未标记的
+         */
+        function startPriorityReview() {
+            const allWords = getDifficultWords();
+            
+            // 筛选出困难和学习中的单词
+            let difficultWords = allWords.filter(w => 
+                w.mastery === 'hard' || w.mastery === 'learning' || !w.mastery
+            );
+            
+            if (difficultWords.length === 0) {
+                alert('🎉 太棒了！你没有困难单词需要复习了！');
+                return;
+            }
+            
+            const totalDifficult = difficultWords.length;
+            
+            // 按掌握度优先级排序：hard > learning > 未标记
+            difficultWords.sort((a, b) => {
+                // 定义优先级：hard = 1, learning = 2, 未标记 = 3
+                const getPriority = (word) => {
+                    if (word.mastery === 'hard') return 1;
+                    if (word.mastery === 'learning') return 2;
+                    return 3; // 未标记
+                };
+                
+                const priorityA = getPriority(a);
+                const priorityB = getPriority(b);
+                
+                // 先按优先级排序
+                if (priorityA !== priorityB) {
+                    return priorityA - priorityB;
+                }
+                
+                // 如果优先级相同，按添加时间倒序（最新的在前）
+                const dateA = a.addedAt ? new Date(a.addedAt).getTime() : 0;
+                const dateB = b.addedAt ? new Date(b.addedAt).getTime() : 0;
+                return dateB - dateA;
+            });
+            
+            let batchSize;
+            if (totalDifficult <= 15) {
+                batchSize = totalDifficult;
+            } else {
+                batchSize = Math.round(totalDifficult * 0.25);
+                batchSize = Math.max(batchSize, 8);
+                batchSize = Math.min(batchSize, 18);
+                batchSize = Math.min(batchSize, totalDifficult);
+            }
+            
+            reviewWords = difficultWords.slice(0, batchSize);
+            currentReviewIndex = 0;
+            reviewHistory = [];
+            
+            // 显示复习界面
+            const overlay = document.getElementById('review-overlay');
+            overlay.style.display = 'flex';
+            
+            // 重置撤销按钮
+            updatePrevButtonTooltip();
+            
+            // 显示第一个单词
+            showReviewCard(0);
+            
+            console.log(`开始优先复习困难词，本次抽取 ${reviewWords.length} / ${totalDifficult} 个`);
+            console.log('排序：困难 > 学习中 > 未标记');
+        }
+        
+        /**
+         * 显示复习卡片
+         * @param {number} index - 单词索引
+         */
+        /**
+         * 创建单词卡片DOM
+         * @param {Object} wordData - 单词数据
+         * @param {number} cardIndex - 卡片索引
+         * @returns {HTMLElement} 卡片元素
+         */
+        function createWordCard(wordData, cardIndex) {
+            const card = document.createElement('div');
+            card.className = 'word-card';
+            card.dataset.index = cardIndex;
+            
+            // 构建来源链接
+            let sourceLinkHtml = '';
+            let sourceHref = '#';
+            let sourceText = '来源未知';
+            
+            if (wordData.storyId) {
+                sourceHref = `story.html?id=${wordData.storyId}`;
+                sourceText = `来自 ${wordData.storyId}`;
+            } else if (wordData.source) {
+                sourceHref = `story.html?id=${wordData.source}`;
+                sourceText = `来自 ${wordData.source}`;
+            }
+            
+            if (sourceHref !== '#') {
+                sourceLinkHtml = `<a href="${sourceHref}" target="_blank">${sourceText}</a>`;
+            } else {
+                sourceLinkHtml = `<span style="color: #999999;">${sourceText}</span>`;
+            }
+            
+            card.innerHTML = `
+                <div class="word-card-content">
+                    <!-- 正面部分：单词 -->
+                    <div class="card-front-section">
+                        <div class="card-word">${wordData.word}</div>
+                        <div class="card-phonetic">${wordData.phonetic || ''}</div>
+                        <button class="card-play-btn" onclick="playCardWord(event)" data-word="${wordData.word}">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5 9v6h3l4 4V5L8 9H5z"></path>
+                                <path d="M16 9.5a3.5 3.5 0 0 1 0 5"></path>
+                                <path d="M18.5 8a6 6 0 0 1 0 8"></path>
+                            </svg>
+                        </button>
+                        <button class="card-flip-btn" onclick="expandCard(${cardIndex})">点击查看释义</button>
+                        <div class="card-hint">思考一下这个单词的含义</div>
+                    </div>
+                    
+                    <!-- 背面部分：释义（初始隐藏） -->
+                    <div class="card-back-section">
+                        <div class="card-meaning">${wordData.meaning}</div>
+                        <div class="card-source">
+                            ${sourceLinkHtml}
+                        </div>
+                        ${wordData.lastReviewed ? `<div class="card-last-reviewed" style="margin-top: 12px; font-size: 0.9rem; color: #666666;">上次复习: ${formatDaysAgo(getDaysSinceReview(wordData.lastReviewed))}</div>` : ''}
+                    </div>
+                </div>
+                
+                <!-- 掌握度按钮区域（集成在卡片内） -->
+                <div class="card-mastery-section">
+                    <div class="mastery-section-title">请标记你的掌握度：</div>
+                    <div class="card-mastery-actions">
+                        <button class="mastery-btn mastery-hard" onclick="markMastery('hard', ${cardIndex})">
+                            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="15" y1="9" x2="9" y2="15"></line>
+                                <line x1="9" y1="9" x2="15" y2="15"></line>
+                            </svg>
+                            困难
+                        </button>
+                        <button class="mastery-btn mastery-learning" onclick="markMastery('learning', ${cardIndex})">
+                            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="12"></line>
+                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                            </svg>
+                            学习中
+                        </button>
+                        <button class="mastery-btn mastery-mastered" onclick="markMastery('mastered', ${cardIndex})">
+                            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9 12l2 2 4-4"></path>
+                            </svg>
+                            已掌握
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        /**
+         * 显示复习卡片（滑动切换）
+         * @param {number} index - 单词索引
+         */
+        function showReviewCard(index) {
+            if (index >= reviewWords.length) {
+                // 复习完成
+                alert('🎉 恭喜！你已经完成了所有单词的复习！');
+                exitReview();
+                return;
+            }
+            
+            currentReviewIndex = index;
+            currentWordData = reviewWords[index];
+            
+            // 更新进度
+            const current = index + 1;
+            const total = reviewWords.length;
+            document.getElementById('review-current').textContent = current;
+            document.getElementById('review-total').textContent = total;
+            
+            // 更新可视化进度条
+            const progressPercent = (current / total) * 100;
+            const progressBar = document.getElementById('review-progress-bar');
+            if (progressBar) {
+                progressBar.style.width = progressPercent + '%';
+            }
+            
+            // 获取滑块容器
+            const slider = document.getElementById('word-card-slider');
+            
+            // 检查是否已经存在该索引的卡片
+            let card = slider.querySelector(`.word-card[data-index="${index}"]`);
+            
+            if (!card) {
+                // 如果不存在，创建新卡片
+                card = createWordCard(currentWordData, index);
+                slider.appendChild(card);
+            }
+            
+            // 计算需要滑动的距离（每个卡片宽度为100%）
+            const slideOffset = -(index * 100);
+            
+            // 执行滑动动画
+            slider.style.transform = `translateX(${slideOffset}%)`;
+            
+            // 更新撤销按钮显示
+            updatePrevButtonTooltip();
+            
+            // 更新导航按钮状态
+            updateNavButtons(index, total);
+            
+            console.log('显示单词:', currentWordData.word);
+        }
+
+        /**
+         * 更新导航按钮状态
+         * @param {number} currentIndex - 当前索引
+         * @param {number} total - 总数
+         */
+        function updateNavButtons(currentIndex, total) {
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            
+            // 上一个按钮：第一个单词时禁用
+            if (prevBtn) {
+                prevBtn.disabled = currentIndex === 0;
+            }
+            
+            // 下一个按钮：最后一个单词时禁用
+            if (nextBtn) {
+                nextBtn.disabled = currentIndex >= total - 1;
+            }
+        }
+
+        /**
+         * 智能"上一个"：融合撤销和导航功能
+         * - 有历史记录时：撤销上一个标记操作并返回
+         * - 无历史记录时：仅返回上一个单词（不改变数据）
+         */
+        function goToPreviousOrUndo() {
+            if (reviewHistory.length > 0) {
+                // 有历史记录：撤销操作并返回
+                const lastAction = reviewHistory.pop();
+                
+                // 恢复之前的掌握度
+                if (lastAction.oldMastery !== null) {
+                    updateWordMastery(lastAction.word, lastAction.meaning, lastAction.oldMastery);
+                } else {
+                    // 如果之前没有掌握度，移除掌握度标记
+                    const words = getDifficultWords();
+                    const wordIndex = words.findIndex(w => 
+                        w.word === lastAction.word && w.meaning === lastAction.meaning
+                    );
+                    if (wordIndex !== -1) {
+                        delete words[wordIndex].mastery;
+                        saveDifficultWords(words);
+                    }
+                }
+                
+                // 返回到对应的单词
+                showReviewCard(lastAction.index);
+                
+                // 更新按钮提示文本
+                updatePrevButtonTooltip();
+                
+                console.log('已撤销上一个操作，剩余可撤销：', reviewHistory.length);
+            } else {
+                // 无历史记录：仅导航到上一个单词
+                if (currentReviewIndex > 0) {
+                    showReviewCard(currentReviewIndex - 1);
+                }
+            }
+        }
+        
+        /**
+         * 更新"上一个"按钮的提示文本
+         * 根据是否有标记历史动态显示不同的提示信息
+         */
+        function updatePrevButtonTooltip() {
+            const prevBtn = document.getElementById('prev-btn');
+            if (!prevBtn) return;
+            
+            if (reviewHistory.length > 0) {
+                // 有标记历史：提示可以撤销
+                if (reviewHistory.length === 1) {
+                    prevBtn.title = '上一个单词（点击将撤销上一个标记并返回）';
+                } else {
+                    prevBtn.title = `上一个单词（点击将撤销上一个标记并返回，还可撤销 ${reviewHistory.length - 1} 个标记）`;
+                }
+            } else {
+                // 无标记历史：仅导航
+                prevBtn.title = '上一个单词（返回上一个单词，不改变任何标记）';
+            }
+        }
+
+        /**
+         * 跳转到下一个单词
+         */
+        function goToNextCard() {
+            if (currentReviewIndex < reviewWords.length - 1) {
+                showReviewCard(currentReviewIndex + 1);
+            }
+        }
+
+        /**
+         * 展开卡片（显示释义）
+         * @param {number} cardIndex - 卡片在reviewWords中的索引
+         */
+        function expandCard(cardIndex) {
+            const slider = document.getElementById('word-card-slider');
+            // 通过data-index属性找到对应的卡片
+            const card = slider.querySelector(`.word-card[data-index="${cardIndex}"]`);
+            
+            if (card) {
+                card.classList.add('expanded');
+                // 隐藏"点击查看释义"按钮
+                const flipBtn = card.querySelector('.card-flip-btn');
+                if (flipBtn) {
+                    flipBtn.style.display = 'none';
+                }
+            }
+        }
+        
+        /**
+         * 播放卡片单词
+         * @param {Event} event - 事件对象
+         */
+        function playCardWord(event) {
+            event.stopPropagation();
+            const word = event.target.closest('button').dataset.word;
+            if (word) {
+                speakWord(word);
+            }
+        }
+
+        const REVIEW_LOG_STORAGE_KEY = 'reviewHistoryLog';
+
+        function getReviewLog() {
+            try {
+                const raw = localStorage.getItem(REVIEW_LOG_STORAGE_KEY);
+                if (!raw) return [];
+                const parsed = JSON.parse(raw);
+                return Array.isArray(parsed) ? parsed : [];
+            } catch (error) {
+                console.warn('读取复习历史失败', error);
+                return [];
+            }
+        }
+
+        function saveReviewLog(log) {
+            try {
+                localStorage.setItem(REVIEW_LOG_STORAGE_KEY, JSON.stringify(log));
+            } catch (error) {
+                console.warn('保存复习历史失败', error);
+            }
+        }
+
+        /**
+         * 获取本地日期的字符串格式（YYYY-MM-DD）
+         * 使用本地时区，而不是 UTC，避免时区问题
+         * @param {Date} date - 日期对象，如果不提供则使用当前日期
+         * @returns {string} 格式化的日期字符串，如 "2025-11-18"
+         */
+        function getLocalDateString(date = new Date()) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function getReviewLogWithSeed() {
+            let log = getReviewLog();
+            // 如果 log 为空，尝试从生词本的 lastReviewed 字段生成
+            // 这样可以兼容旧数据
+            if (log.length > 0) {
+                // 验证并修复 log 中的日期格式（兼容旧数据）
+                let needsUpdate = false;
+                log = log.map(entry => {
+                    if (entry.date && !/^\d{4}-\d{2}-\d{2}$/.test(entry.date)) {
+                        // 如果日期格式不是 YYYY-MM-DD，尝试修复
+                        try {
+                            const date = new Date(entry.date);
+                            const localDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+                            entry.date = getLocalDateString(localDate);
+                            needsUpdate = true;
+                        } catch (e) {
+                            console.warn('无法修复日期格式:', entry.date);
+                        }
+                    }
+                    return entry;
+                });
+                if (needsUpdate) {
+                    saveReviewLog(log);
+                }
+                return log;
+            }
+
+            const words = getDifficultWords();
+            const seededMap = new Map();
+
+            words.forEach(word => {
+                if (!word.lastReviewed) return;
+                // word.lastReviewed 是 ISO 字符串（UTC 时间）
+                // 我们需要将其转换为本地日期
+                // 方法：创建 Date 对象，然后使用本地时间的年月日
+                const reviewDate = new Date(word.lastReviewed);
+                // 使用本地时间的年月日，而不是 UTC 时间
+                const localDate = new Date(reviewDate.getFullYear(), reviewDate.getMonth(), reviewDate.getDate());
+                const dateKey = getLocalDateString(localDate);
+                const entryKey = `${word.word || ''}___${word.meaning || ''}`;
+                const mapKey = `${dateKey}::${entryKey}`;
+                if (seededMap.has(mapKey)) return;
+                seededMap.set(mapKey, {
+                    date: dateKey,
+                    timestamp: word.lastReviewed,
+                    word: word.word,
+                    meaning: word.meaning || '',
+                    mastery: word.mastery || '',
+                    storyId: word.storyId || '',
+                    storyTitle: word.storyTitle || '',
+                    phonetic: word.phonetic || '',
+                    reviewCount: word.reviewCount || 0,
+                    key: entryKey
+                });
+            });
+
+            if (seededMap.size > 0) {
+                log = Array.from(seededMap.values()).sort((a, b) => new Date(a.timestamp || a.date) - new Date(b.timestamp || b.date));
+                saveReviewLog(log);
+            }
+
+            return log;
+        }
+
+        function recordReviewEvent(wordObj, masteryLevel) {
+            console.log('🔍 recordReviewEvent 被调用:', { wordObj, masteryLevel });
+            if (!wordObj || !wordObj.word) {
+                console.warn('⚠️ recordReviewEvent 提前返回: wordObj 或 wordObj.word 不存在', wordObj);
+                return;
+            }
+            const log = getReviewLog();
+            const now = new Date();
+            const dateKey = getLocalDateString(now);
+            console.log('📅 生成的日期键:', dateKey);
+            const entryKey = `${wordObj.word}___${wordObj.meaning || ''}`;
+
+            const baseEntry = {
+                date: dateKey,
+                timestamp: now.toISOString(),
+                word: wordObj.word,
+                meaning: wordObj.meaning || '',
+                mastery: masteryLevel || wordObj.mastery || '',
+                storyId: wordObj.storyId || '',
+                storyTitle: wordObj.storyTitle || '',
+                phonetic: wordObj.phonetic || '',
+                reviewCount: wordObj.reviewCount || 0,
+                key: entryKey
+            };
+
+            const existingIndex = log.findIndex(entry => entry.date === dateKey && entry.key === entryKey);
+            if (existingIndex !== -1) {
+                log[existingIndex] = { ...log[existingIndex], ...baseEntry };
+                console.log(`📝 更新复习记录: ${wordObj.word} - ${dateKey}`);
+            } else {
+                log.push(baseEntry);
+                console.log(`✅ 新增复习记录: ${wordObj.word} - ${dateKey}`);
+            }
+
+            // 仅保留最近 365 天的数据，防止无限增长
+            if (log.length > 1000) {
+                log.splice(0, log.length - 1000);
+            }
+
+            saveReviewLog(log);
+            
+            // 如果当前在"复习总览"标签页，自动刷新图表
+            const reviewOverviewTab = document.getElementById('tab-review-overview');
+            if (reviewOverviewTab && reviewOverviewTab.classList.contains('active')) {
+                // 延迟刷新，确保数据已保存
+                setTimeout(() => {
+                    renderReviewOverview();
+                }, 100);
+            }
+        }
+        
+        /**
+         * 标记掌握程度并切换到下一张卡片
+         * @param {string} level - 'hard' | 'learning' | 'mastered'
+         * @param {number} cardIndex - 卡片索引
+         */
+        function markMastery(level, cardIndex) {
+            if (!currentWordData) return;
+            
+            // 保存历史记录（用于撤销）
+            reviewHistory.push({
+                index: currentReviewIndex,
+                word: currentWordData.word,
+                meaning: currentWordData.meaning,
+                oldMastery: currentWordData.mastery || null,
+                newMastery: level
+            });
+            
+            // 更新单词的掌握度标记
+            updateWordMastery(currentWordData.word, currentWordData.meaning, level);
+            
+            // 更新撤销按钮显示（显示可撤销次数）
+            updatePrevButtonTooltip();
+            
+            // 延迟执行滑动切换，让用户看到操作反馈
+            setTimeout(() => {
+                showReviewCard(currentReviewIndex + 1);
+            }, 300);
+        }
+        
+        
+        /**
+         * 更新单词的掌握度
+         * 根据艾宾浩斯遗忘曲线算法，处理三种情况：
+         * - ✅ 已掌握：reviewCount++，间隔延长
+         * - 📝 学习中：reviewCount 保持不变，间隔不变
+         * - ❌ 困难：reviewCount = 0，间隔重置
+         * @param {string} word - 单词
+         * @param {string} meaning - 释义
+         * @param {string} level - 掌握度等级 ('mastered' | 'learning' | 'hard')
+         */
+        function updateWordMastery(word, meaning, level) {
+            const words = getDifficultWords();
+            const wordIndex = words.findIndex(w => w.word === word && w.meaning === meaning);
+            
+            if (wordIndex !== -1) {
+                const wasMastered = words[wordIndex].mastery === 'mastered';
+                const currentReviewCount = words[wordIndex].reviewCount || 0;
+                
+                words[wordIndex].mastery = level;
+                words[wordIndex].lastReviewed = new Date().toISOString();
+                
+                // 根据不同的掌握度等级，应用不同的规则
+                if (level === 'mastered') {
+                    // ✅ 已掌握（Easy）：复习次数+1，间隔延长
+                    if (wasMastered) {
+                        // 如果之前已经是"已掌握"，说明是复习，增加复习次数
+                        words[wordIndex].reviewCount = currentReviewCount + 1;
+                        const nextInterval = getNextReviewInterval(words[wordIndex].reviewCount);
+                        console.log(`✅ 复习成功！"${word}" 复习次数: ${words[wordIndex].reviewCount}，下次复习间隔: ${nextInterval}天`);
+                    } else {
+                        // 如果是第一次标记为"已掌握"，初始化复习次数为0
+                        words[wordIndex].reviewCount = 0;
+                        console.log(`✅ 首次掌握 "${word}"，下次复习间隔: 1天`);
+                    }
+                } else if (level === 'learning') {
+                    // 📝 学习中（Medium/Good）：复习次数保持不变，间隔不变
+                    // reviewCount 保持原值，不改变
+                    const currentInterval = getNextReviewInterval(currentReviewCount);
+                    console.log(`📝 学习中 "${word}" 复习次数: ${currentReviewCount}，下次复习间隔: ${currentInterval}天`);
+                } else if (level === 'hard') {
+                    // ❌ 困难（Hard/Again）：复习次数清零，间隔重置为1天
+                    words[wordIndex].reviewCount = 0;
+                    console.log(`❌ 困难 "${word}" 复习次数已重置为 0，下次复习间隔: 1天（重新开始记忆循环）`);
+                }
+                
+                // 调试：检查要传递的参数
+                const wordObjToRecord = { ...words[wordIndex] };
+                console.log('📤 准备调用 recordReviewEvent:', { wordObj: wordObjToRecord, level });
+                recordReviewEvent(wordObjToRecord, level);
+                saveDifficultWords(words);
+                console.log(`已标记 "${word}" 为: ${level}`);
+            }
+        }
+        
+        /**
+         * 退出复习模式
+         */
+        function exitReview() {
+            const overlay = document.getElementById('review-overlay');
+            overlay.style.display = 'none';
+            
+            // 清理卡片容器
+            const slider = document.getElementById('word-card-slider');
+            slider.innerHTML = '';
+            slider.style.transform = 'translateX(0)';
+            
+            // 重置状态
+            reviewWords = [];
+            currentReviewIndex = 0;
+            currentWordData = null;
+            reviewHistory = [];
+            
+            // 重新渲染生词本（更新掌握度标记）
+            renderDifficultWords();
+        }
+        
+        /* ========== 标签页切换功能 ========== */
+        /**
+         * 切换标签页
+         * @param {string} tabName - 标签页名称：'words-list' 或 'review-overview'
+         */
+        function switchTab(tabName) {
+            // 隐藏所有标签页内容
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // 移除所有按钮的激活状态
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // 显示选中的标签页
+            const targetTab = document.getElementById(`tab-${tabName}`);
+            if (targetTab) {
+                targetTab.classList.add('active');
+            }
+            
+            // 激活对应的按钮（通过按钮文本匹配）
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                if ((tabName === 'words-list' && btn.textContent.trim() === '我的生词本') ||
+                    (tabName === 'review-overview' && btn.textContent.trim() === '复习总览')) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // 如果切换到"复习总览"，立即刷新图表数据
+            if (tabName === 'review-overview') {
+                renderReviewOverview();
+            }
+        }
+
+        /* ========== 复习总览图表功能 ========== */
+        let masteryPieChart = null;
+        let futureReviewBarChart = null;
+
+        /**
+         * 渲染复习总览（所有图表）
+         */
+        function renderReviewOverview() {
+            const words = getDifficultWords();
+            
+            // 更新顶部徽章和学习总结卡片
+            updateReviewOverviewSummary(words);
+            
+            // 渲染图表
+            renderMasteryPieChart();
+            renderFutureReviewBarChart();
+            renderReviewHeatmap();
+        }
+
+        /**
+         * 更新复习总览的摘要信息（顶部徽章和学习总结卡片）
+         */
+        function updateReviewOverviewSummary(words) {
+            // 计算统计数据
+            const stats = {
+                mastered: 0,
+                learning: 0,
+                hard: 0,
+                unmarked: 0
+            };
+            
+            words.forEach(word => {
+                if (word.mastery === 'mastered') {
+                    stats.mastered++;
+                } else if (word.mastery === 'learning') {
+                    stats.learning++;
+                } else if (word.mastery === 'hard') {
+                    stats.hard++;
+                } else {
+                    stats.unmarked++;
+                }
+            });
+            
+            const total = stats.mastered + stats.learning + stats.hard + stats.unmarked;
+            const masteryPercentage = total > 0 ? Math.round((stats.mastered / total) * 100) : 0;
+            
+            // 计算今日待复习数
+            const todayReviewCount = calculateTodayReviewCount(words);
+            
+            // 计算今日已完成数（基于复习日志）
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const todayISO = getLocalDateString(today);
+            const reviewLog = getReviewLogWithSeed();
+            const todayDone = reviewLog.filter(entry => entry.date === todayISO).length;
+            
+            // 更新顶部徽章
+            const todayReviewBadge = document.getElementById('today-review-badge');
+            const todayReviewCountEl = document.getElementById('today-review-count');
+            if (todayReviewBadge && todayReviewCountEl) {
+                if (todayReviewCount > 0) {
+                    todayReviewCountEl.textContent = todayReviewCount;
+                    todayReviewBadge.style.display = 'inline-block';
+                } else {
+                    todayReviewBadge.style.display = 'none';
+                }
+            }
+            
+            // 更新学习总结卡片
+            const summaryTotal = document.getElementById('summary-total');
+            const summaryMasteryRate = document.getElementById('summary-mastery-rate');
+            const summaryTargetCount = document.getElementById('summary-target-count');
+            const summaryTodayDone = document.getElementById('summary-today-done');
+            const summaryDelta = document.getElementById('summary-mastery-delta');
+            const summaryProgress = document.getElementById('summary-progress');
+            const summaryProgressPercent = document.getElementById('summary-progress-percent');
+            const summaryProgressFill = document.getElementById('summary-progress-fill');
+            const summaryHint = document.getElementById('summary-hint');
+            
+            if (summaryTotal) summaryTotal.textContent = total;
+            if (summaryMasteryRate) summaryMasteryRate.textContent = masteryPercentage + '%';
+            if (summaryTargetCount) summaryTargetCount.textContent = todayReviewCount;
+            if (summaryTodayDone) summaryTodayDone.textContent = todayDone;
+            if (summaryDelta) summaryDelta.textContent = '较昨日 +0%';
+            
+            // 更新进度条和说明文字
+            if (todayReviewCount > 0 && summaryProgress && summaryProgressPercent && summaryProgressFill) {
+                const progressPercent = Math.round((todayDone / todayReviewCount) * 100);
+                summaryProgressPercent.textContent = progressPercent + '%';
+                summaryProgressFill.style.width = Math.min(progressPercent, 100) + '%';
+                summaryProgress.style.display = 'block';
+                
+                const remaining = todayReviewCount - todayDone;
+                let hintText = '';
+                if (remaining > 0) {
+                    hintText = `再复习 ${remaining} 个词就能点亮今日目标！`;
+                } else if (todayDone >= todayReviewCount) {
+                    hintText = '🎉 今日目标已全部完成，太棒了！';
+                }
+                if (summaryHint) {
+                    summaryHint.textContent = hintText || '保持节奏，今天也要多记几个单词！';
+                    summaryHint.style.display = 'block';
+                }
+            } else {
+                if (summaryProgress) {
+                    summaryProgress.style.display = 'none';
+                }
+                if (summaryProgressFill) {
+                    summaryProgressFill.style.width = '0%';
+                }
+                if (summaryProgressPercent) {
+                    summaryProgressPercent.textContent = '0%';
+                }
+                if (summaryHint) {
+                    summaryHint.textContent = '今日暂无复习计划，挑选几个单词热热身吧～';
+                    summaryHint.style.display = 'block';
+                }
+            }
+
+            const masteryFootnote = document.getElementById('mastery-footnote');
+            if (masteryFootnote) {
+                masteryFootnote.textContent = `已掌握词数 ${stats.mastered} 个`;
+            }
+        }
+
+        /**
+         * 计算今日待复习单词数
+         */
+        function calculateTodayReviewCount(words) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            let count = 0;
+            words.forEach(word => {
+                if (word.mastery === 'mastered' && word.lastReviewed) {
+                    const status = calculateReviewStatus(word);
+                    if (status && (status.isOverdue || status.daysRemaining === 0)) {
+                        count++;
+                    }
+                }
+            });
+            
+            return count;
+        }
+
+        /**
+         * 渲染生词掌握度饼图
+         */
+        function renderMasteryPieChart() {
+            const words = getDifficultWords();
+            
+            // 统计各掌握度数量
+            const stats = {
+                mastered: 0,
+                learning: 0,
+                hard: 0,
+                unmarked: 0
+            };
+            
+            words.forEach(word => {
+                if (word.mastery === 'mastered') {
+                    stats.mastered++;
+                } else if (word.mastery === 'learning') {
+                    stats.learning++;
+                } else if (word.mastery === 'hard') {
+                    stats.hard++;
+                } else {
+                    stats.unmarked++;
+                }
+            });
+            
+            const ctx = document.getElementById('mastery-pie-chart');
+            if (!ctx) return;
+            
+            // 销毁旧图表（如果存在）
+            if (masteryPieChart) {
+                masteryPieChart.destroy();
+            }
+            
+            const totalWords = stats.mastered + stats.learning + stats.hard + stats.unmarked;
+            const masteryPercentage = totalWords > 0 ? Math.round((stats.mastered / totalWords) * 100) : 0;
+            const todayReviewCount = calculateTodayReviewCount(words);
+            
+            // 注册自定义 tooltip positioner，使其固定在数据段外侧（不跟随鼠标）
+            Chart.Tooltip.positioners.doughnutCenter = function(elements, eventPosition) {
+                if (!elements || elements.length === 0) {
+                    return false;
+                }
+                
+                const chart = this.chart || this._chart;
+                if (!chart || !chart.chartArea) {
+                    return false;
+                }
+                
+                const chartArea = chart.chartArea;
+                const centerX = (chartArea.left + chartArea.right) / 2;
+                const centerY = (chartArea.top + chartArea.bottom) / 2;
+                
+                // 获取当前悬停的数据元素（segment）
+                const element = elements[0];
+                if (!element || !element.element) {
+                    return eventPosition;
+                }
+                
+                // 获取 segment 的位置（使用 tooltipPosition 方法获取 segment 中心）
+                const position = element.element.tooltipPosition();
+                
+                // 计算从圆心到 segment 中心的方向
+                const dx = position.x - centerX;
+                const dy = position.y - centerY;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance === 0) {
+                    return position;
+                }
+                
+                // 延长方向向量，使 tooltip 固定显示在 segment 外侧
+                const extendDistance = distance + 100; // 固定在 segment 外侧 100px
+                const angle = Math.atan2(dy, dx);
+                
+                return {
+                    x: centerX + Math.cos(angle) * extendDistance,
+                    y: centerY + Math.sin(angle) * extendDistance
+                };
+            };
+            
+            masteryPieChart = new Chart(ctx, {
+                type: 'doughnut',  // 使用环形图，便于在中心显示文本
+                data: {
+                    labels: ['已掌握', '学习中', '困难', '未标记'],
+                    datasets: [{
+                        data: [stats.mastered, stats.learning, stats.hard, stats.unmarked],
+                        backgroundColor: [
+                            '#C8E6C9',
+                            '#E0D8C0',
+                            '#D9B5AF',
+                            '#E9ECEF'
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '65%',  // 环形图内径，留出更多中心空间
+                    layout: {
+                        padding: {
+                            right: 20  // 为右侧图例留出空间
+                        }
+                    },
+                    animation: {
+                        animateRotate: true,
+                        duration: 1000,  // 旋转动画时长
+                        easing: 'easeOutCubic'
+                    },
+                    interaction: {
+                        intersect: true,
+                        mode: 'nearest'
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                padding: 10,
+                                font: {
+                                    size: 12,
+                                    family: 'Noto Sans SC, sans-serif'
+                                },
+                                color: COLOR_TEXT_MUTED,
+                                usePointStyle: true,
+                                pointStyle: 'circle',
+                                boxWidth: 8,
+                                boxHeight: 8
+                            },
+                            align: 'start'
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(248, 250, 252, 0.95)',  // 透明灰白色背景
+                            padding: 8,  // 减小内边距，使标签框更小
+                            titleFont: {
+                                size: 11,  // 减小字体
+                                weight: '500',
+                                family: 'Inter, Noto Sans SC, sans-serif'
+                            },
+                            bodyFont: {
+                                size: 11,  // 减小字体
+                                family: 'Inter, Noto Sans SC, sans-serif'
+                            },
+                            titleColor: '#1E293B',  // 深色标题
+                            bodyColor: '#475569',   // 深灰色内容
+                            borderColor: 'rgba(203, 213, 225, 0.4)',  // 浅灰边框
+                            borderWidth: 1,
+                            cornerRadius: 8,  // 减小圆角
+                            displayColors: false,  // 不显示颜色块，节省空间
+                            position: 'doughnutCenter',  // 使用自定义 positioner
+                            caretSize: 0,  // 移除小三角，使其不指向圆心
+                            caretPadding: 10,
+                            animation: {
+                                duration: 200,  // 快速响应（200ms）
+                                easing: 'easeOutCubic'  // 更快的缓动函数
+                            },
+                            callbacks: {
+                                title: function() {
+                                    return '';  // 不显示标题
+                                },
+                                label: function(context) {
+                                    const value = context.parsed || 0;
+                                    const percentage = totalWords > 0 ? ((value / totalWords) * 100).toFixed(1) : 0;
+                                    return `${value} 个 (${percentage}%)`;  // 只显示数量和占比
+                                }
+                            }
+                        }
+                    }
+                },
+                plugins: [{
+                    id: 'centerTextPlugin',
+                    afterDraw: function(chart) {
+                        const ctx = chart.ctx;
+                        const centerX = chart.chartArea.left + (chart.chartArea.right - chart.chartArea.left) / 2;
+                        const centerY = chart.chartArea.top + (chart.chartArea.bottom - chart.chartArea.top) / 2;
+                        
+                        ctx.save();
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        
+                        // 绘制掌握率百分比（加粗放大）
+                        ctx.font = '700 32px Inter, Noto Sans SC, sans-serif';
+                        ctx.fillStyle = COLOR_PRIMARY;
+                        ctx.fillText(masteryPercentage + '%', centerX, centerY - 8);
+                        
+                        // 绘制"掌握率"标签
+                        ctx.font = '500 13px Inter, Noto Sans SC, sans-serif';
+                        ctx.fillStyle = COLOR_TEXT_MUTED;
+                        ctx.fillText('掌握率', centerX, centerY + 18);
+                        
+                        ctx.restore();
+                    }
+                }, {
+                    id: 'percentagePlugin',
+                    beforeDraw: function(chart) {
+                        const ctx = chart.ctx;
+                        ctx.save();
+                        const datasets = chart.data.datasets;
+                        const meta = chart.getDatasetMeta(0);
+                        
+                        datasets.forEach((dataset, datasetIndex) => {
+                            meta.data.forEach((element, index) => {
+                                const value = dataset.data[index];
+                                const percentage = totalWords > 0 ? ((value / totalWords) * 100).toFixed(0) : 0;
+                                
+                                if (percentage > 5) {  // 只显示大于5%的百分比
+                                    const position = element.tooltipPosition();
+                                    ctx.font = '600 12px Noto Sans SC, sans-serif';
+                                    ctx.fillStyle = COLOR_TEXT_STRONG;
+                                    ctx.textAlign = 'center';
+                                    ctx.textBaseline = 'middle';
+                                    ctx.fillText(percentage + '%', position.x, position.y);
+                                }
+                            });
+                        });
+                        ctx.restore();
+                    }
+                }]
+            });
+        }
+
+        /**
+         * 渲染未来7天复习量柱状图
+         */
+        function renderFutureReviewBarChart() {
+            const words = getDifficultWords();
+            
+            // 注册柱状图自定义 tooltip positioner，确保始终显示在柱子正上方
+            if (!Chart.Tooltip.positioners.barTop) {
+                Chart.Tooltip.positioners.barTop = function(elements, eventPosition) {
+                    if (!elements || elements.length === 0) {
+                        return false;
+                    }
+                    
+                    const element = elements[0];
+                    if (!element || !element.element) {
+                        return false;
+                    }
+                    
+                    const chart = this.chart || this._chart;
+                    if (!chart) {
+                        return false;
+                    }
+                    
+                    // 获取柱子的位置信息
+                    const barElement = element.element;
+                    const x = barElement.x; // 柱子的中心 x 坐标
+                    
+                    // 对于柱状图，y 坐标是柱子的顶部
+                    // 但需要确保获取的是柱子的顶部，而不是底部
+                    let y;
+                    if (barElement.height !== undefined) {
+                        // 如果柱子有高度属性，顶部 = y - height
+                        y = barElement.y - barElement.height;
+                    } else {
+                        // 否则使用 yScale 来获取顶部位置
+                        const yScale = chart.scales.y;
+                        const value = element.parsed.y;
+                        y = yScale.getPixelForValue(value);
+                    }
+                    
+                    // 返回柱子顶部正中央的位置，向上偏移 20px 避免遮挡
+                    return {
+                        x: x,
+                        y: y - 20
+                    };
+                };
+            }
+            
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            // 计算未来7天每天需要复习的单词数量
+            const dailyCounts = [];
+            const dateLabels = [];
+            
+            for (let i = 0; i < 7; i++) {
+                const targetDate = new Date(today);
+                targetDate.setDate(today.getDate() + i);
+                
+                let count = 0;
+                words.forEach(word => {
+                    if (word.mastery === 'mastered' && word.lastReviewed) {
+                        const status = calculateReviewStatus(word);
+                        if (status) {
+                            const dueDate = new Date(word.lastReviewed);
+                            dueDate.setDate(dueDate.getDate() + status.intervalDays);
+                            
+                            // 检查是否在目标日期或之前到期
+                            if (dueDate <= targetDate) {
+                                count++;
+                            }
+                        }
+                    }
+                });
+                
+                dailyCounts.push(count);
+                
+                // 生成日期标签
+                if (i === 0) {
+                    dateLabels.push('今天');
+                } else if (i === 1) {
+                    dateLabels.push('明天');
+                } else {
+                    const month = targetDate.getMonth() + 1;
+                    const day = targetDate.getDate();
+                    dateLabels.push(`${month}/${day}`);
+                }
+            }
+            
+            const ctx = document.getElementById('future-review-bar-chart');
+            if (!ctx) return;
+            
+            // 销毁旧图表（如果存在）
+            if (futureReviewBarChart) {
+                futureReviewBarChart.destroy();
+            }
+            
+            // 计算平均值
+            const averageCount = dailyCounts.length > 0 
+                ? Math.round(dailyCounts.reduce((a, b) => a + b, 0) / dailyCounts.length) 
+                : 0;
+            
+            // 生成推荐时段
+            function getRecommendedTime(count) {
+                if (count === 0) return '';
+                if (count <= 5) return '早晨 8:00-9:00';
+                if (count <= 15) return '上午 10:00-11:00';
+                return '下午 14:00-16:00';
+            }
+
+            const barColors = dailyCounts.map((_, index) => index === 0 ? COLOR_PRIMARY : COLOR_PRIMARY_LIGHT);
+
+            futureReviewBarChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: dateLabels,
+                    datasets: [{
+                        label: '需要复习的单词数',
+                        data: dailyCounts,
+                        backgroundColor: barColors,
+                        hoverBackgroundColor: dailyCounts.map((_, index) => index === 0 ? '#1E8BA8' : 'rgba(47, 158, 185, 0.75)'),
+                        borderColor: 'transparent',
+                        borderWidth: 0,
+                        borderRadius: 10,
+                        borderSkipped: false,
+                        barPercentage: 0.5,  // 柱子只占用50%宽度，变得修长精致
+                        categoryPercentage: 0.6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: {
+                        duration: 600  // 动画时长
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1,
+                                precision: 0,
+                                font: {
+                                    size: 11,
+                                    family: 'Noto Sans SC, sans-serif'
+                                },
+                                color: COLOR_TEXT_MUTED
+                            },
+                            title: {
+                                display: false  // 删除Y轴标题
+                            },
+                            grid: {
+                                display: true,
+                                color: 'rgba(148, 163, 184, 0.18)',
+                                lineWidth: 1
+                            },
+                            border: {
+                                display: false
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: false
+                            },
+                            grid: {
+                                display: true,
+                                color: 'rgba(148, 163, 184, 0.12)',
+                                lineWidth: 1,
+                                drawOnChartArea: true
+                            },
+                            ticks: {
+                                font: {
+                                    size: 12,
+                                    family: 'Inter, Noto Sans SC, sans-serif',
+                                    weight: '500'
+                                },
+                                color: COLOR_TEXT_MUTED,
+                                padding: 8
+                            },
+                            border: {
+                                display: false
+                            },
+                            categoryPercentage: 0.6  // 类别间距，让柱子更精致
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            enabled: false,
+                            external: function(context) {
+                                const { chart, tooltip } = context;
+                                let tooltipEl = chart.canvas.__futureBarTooltip;
+                                if (!tooltipEl) {
+                                    tooltipEl = document.createElement('div');
+                                    tooltipEl.className = 'future-bar-tooltip';
+                                    const inner = document.createElement('div');
+                                    inner.className = 'future-bar-tooltip-content';
+                                    tooltipEl.appendChild(inner);
+                                    document.body.appendChild(tooltipEl);
+                                    chart.canvas.__futureBarTooltip = tooltipEl;
+                                }
+                                const tooltipContent = tooltipEl.querySelector('.future-bar-tooltip-content');
+                                if (tooltip.opacity === 0) {
+                                    tooltipEl.style.opacity = 0;
+                                    tooltipEl.style.pointerEvents = 'none';
+                                    return;
+                                }
+                                const value = tooltip.dataPoints && tooltip.dataPoints[0] ? tooltip.dataPoints[0].parsed.y : '';
+                                tooltipContent.textContent = value !== undefined ? value : '';
+                                const canvasRect = chart.canvas.getBoundingClientRect();
+                                const tooltipWidth = tooltipEl.offsetWidth;
+                                const tooltipHeight = tooltipEl.offsetHeight;
+                                const targetX = canvasRect.left + tooltip.caretX - tooltipWidth / 2;
+                                const targetY = canvasRect.top + tooltip.caretY - tooltipHeight - 10;
+                                tooltipEl.style.opacity = 1;
+                                tooltipEl.style.pointerEvents = 'none';
+                                tooltipEl.style.position = 'fixed';
+                                tooltipEl.style.left = `${targetX}px`;
+                                tooltipEl.style.top = `${targetY}px`;
+                                tooltipEl.style.zIndex = '9999';
+                            }
+                        }
+                    }
+                },
+                plugins: [{
+                    id: 'averageLinePlugin',
+                    afterDraw: function(chart) {
+                        if (averageCount === 0) return;
+                        
+                        const ctx = chart.ctx;
+                        const yScale = chart.scales.y;
+                        const xScale = chart.scales.x;
+                        
+                        // 计算平均线的Y坐标
+                        const averageY = yScale.getPixelForValue(averageCount);
+                        
+                        ctx.save();
+                        ctx.strokeStyle = '#9AA6AC';
+                        ctx.lineWidth = 1;
+                        ctx.setLineDash([5, 5]);  // 虚线
+                        ctx.beginPath();
+                        ctx.moveTo(xScale.left, averageY);
+                        ctx.lineTo(xScale.right, averageY);
+                        ctx.stroke();
+
+                        // 绘制平均线标签
+                        ctx.fillStyle = '#9AA6AC';
+                        ctx.font = '11px Inter, Noto Sans SC, sans-serif';
+                        ctx.textAlign = 'right';
+                        ctx.textBaseline = 'middle';
+                        ctx.fillText(`平均 ${averageCount}`, xScale.right - 5, averageY);
+
+                        ctx.restore();
+                    }
+                }]
+            });
+
+            const trendNote = document.getElementById('future-trend-note');
+            if (trendNote) {
+                const reviewLogSnapshot = getReviewLogWithSeed();
+                const todayISO = getLocalDateString(today);
+                const todayDone = reviewLogSnapshot.filter(entry => entry.date === todayISO).length;
+                trendNote.textContent = `平均每日目标 ${averageCount} 个词 · 今日已完成 ${todayDone} 个`;
+            }
+        }
+
+        /**
+         * 渲染复习日历热力图（过去30天）
+         */
+        function renderReviewHeatmap() {
+            const reviewLog = getReviewLogWithSeed();
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const quarterStart = new Date(today.getFullYear(), today.getMonth() - 3, 1);
+            const quarterEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+
+            const dailyReviews = {};
+            const entriesByDate = {};
+
+            for (let d = new Date(quarterStart); d <= quarterEnd; d.setDate(d.getDate() + 1)) {
+                const key = getLocalDateString(d);
+                dailyReviews[key] = 0;
+                entriesByDate[key] = [];
+            }
+
+            reviewLog.forEach(entry => {
+                if (!entry || !entry.date) return;
+                // entry.date 可能已经是 "YYYY-MM-DD" 格式的本地日期字符串
+                // 如果是，直接使用；否则解析为本地日期
+                let dateKey = entry.date;
+                if (!/^\d{4}-\d{2}-\d{2}$/.test(dateKey)) {
+                    // 如果不是标准格式，尝试解析（兼容旧数据）
+                    const reviewDate = new Date(entry.date);
+                    reviewDate.setHours(0, 0, 0, 0);
+                    dateKey = getLocalDateString(reviewDate);
+                }
+                if (!entriesByDate[dateKey]) return;
+
+                const entryKey = entry.key || `${entry.word || ''}___${entry.meaning || ''}`;
+                const existingIndex = entriesByDate[dateKey].findIndex(item => (item.key || `${item.word || ''}___${item.meaning || ''}`) === entryKey);
+                const normalized = { ...entry, key: entryKey };
+
+                if (existingIndex !== -1) {
+                    entriesByDate[dateKey][existingIndex] = normalized;
+                } else {
+                    entriesByDate[dateKey].push(normalized);
+                }
+
+                dailyReviews[dateKey] = entriesByDate[dateKey].length;
+            });
+
+            const heatmapContainer = document.getElementById('review-heatmap');
+            if (!heatmapContainer) return;
+
+            const months = [];
+            for (let offset = 3; offset >= 0; offset--) {
+                months.push(new Date(today.getFullYear(), today.getMonth() - offset, 1));
+            }
+
+            // 创建日历HTML的函数
+            function createMonthCalendar(year, monthIndex, dailyReviews) {
+                const lastDay = new Date(year, monthIndex + 1, 0);
+                const totalDays = lastDay.getDate();
+                
+                // 计算月份第一天是星期几（0 = 周日, 1 = 周一, ..., 6 = 周六）
+                const firstDay = new Date(year, monthIndex, 1);
+                const firstDayOfWeek = firstDay.getDay();
+                
+                let monthHTML = '<div class="heatmap-month">';
+                monthHTML += '<div class="heatmap-month-grid">';
+                
+                // 生成6行7列的网格，总共42个格子
+                for (let row = 0; row < 6; row++) {
+                    for (let col = 0; col < 7; col++) {
+                        const cellIndex = row * 7 + col;
+                        
+                        // 计算这个格子对应的日期
+                        // 前 firstDayOfWeek 个格子是空白（月份第一天之前的空白）
+                        // 然后从第 firstDayOfWeek 个格子开始是 1 号
+                        const dayNumber = cellIndex - firstDayOfWeek + 1;
+                        
+                        if (dayNumber < 1 || dayNumber > totalDays) {
+                            // 超出月份范围的空白格子
+                            monthHTML += '<div class="heatmap-cell heatmap-placeholder"></div>';
+                        } else {
+                            // 有效日期格子
+                            const currentDate = new Date(year, monthIndex, dayNumber);
+                            currentDate.setHours(0, 0, 0, 0);
+                            const dateKey = getLocalDateString(currentDate);
+                            const reviewCount = dailyReviews[dateKey] || 0;
+                            
+                            // 确定颜色等级
+                            let level = 'level-0';
+                            if (reviewCount >= 10) level = 'level-3';
+                            else if (reviewCount >= 7) level = 'level-2';
+                            else if (reviewCount >= 4) level = 'level-1';
+                            else if (reviewCount >= 1) level = 'level-lite';
+                            
+                            const isClickable = reviewCount > 0;
+                            const clickableClass = isClickable ? 'heatmap-cell-clickable' : '';
+                            const cellClass = `heatmap-cell ${level} ${clickableClass}`;
+                            
+                            if (isClickable) {
+                                monthHTML += `<div class="${cellClass}" data-date="${dateKey}" data-count="${reviewCount}" onclick="showDailyReviewModal('${dateKey}')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showDailyReviewModal('${dateKey}')}"></div>`;
+                            } else {
+                                monthHTML += `<div class="${cellClass}" data-date="${dateKey}" data-count="${reviewCount}" role="none" tabindex="-1"></div>`;
+                            }
+                        }
+                    }
+                }
+                
+                monthHTML += '</div>';
+                monthHTML += `<div class="heatmap-month-title">${monthIndex + 1}月</div>`;
+                monthHTML += '</div>';
+                
+                return monthHTML;
+            }
+
+            let heatmapHTML = '<div class="heatmap-quarter">';
+            
+            months.forEach(monthDate => {
+                const year = monthDate.getFullYear();
+                const monthIndex = monthDate.getMonth();
+                heatmapHTML += createMonthCalendar(year, monthIndex, dailyReviews);
+            });
+
+            heatmapHTML += '</div>';
+
+            heatmapContainer.innerHTML = heatmapHTML;
+
+            // 准备 tooltip 元素
+            let heatmapTooltip = document.getElementById('heatmap-tooltip');
+            if (!heatmapTooltip) {
+                heatmapTooltip = document.createElement('div');
+                heatmapTooltip.id = 'heatmap-tooltip';
+                heatmapTooltip.className = 'heatmap-tooltip';
+                heatmapTooltip.innerHTML = `
+                    <div class="heatmap-tooltip-date"></div>
+                    <div class="heatmap-tooltip-count"></div>
+                `;
+                document.body.appendChild(heatmapTooltip);
+            }
+
+            const tooltipDateEl = heatmapTooltip.querySelector('.heatmap-tooltip-date');
+            const tooltipCountEl = heatmapTooltip.querySelector('.heatmap-tooltip-count');
+
+            const formatTooltipDate = (dateStr) => {
+                const dateObj = new Date(dateStr);
+                if (Number.isNaN(dateObj.getTime())) return dateStr;
+                const month = dateObj.getMonth() + 1;
+                const day = dateObj.getDate();
+                const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+                const weekday = weekdays[dateObj.getDay()];
+                return `${month}月${day}日 · ${weekday}`;
+            };
+
+            const updateTooltipPosition = (event, cell) => {
+                const tooltipWidth = heatmapTooltip.offsetWidth || 120;
+                const tooltipHeight = heatmapTooltip.offsetHeight || 40;
+
+                let clientX;
+                let clientY;
+
+                if (event && event.type === 'mousemove') {
+                    clientX = event.clientX;
+                    clientY = event.clientY;
+                } else if (cell) {
+                    const rect = cell.getBoundingClientRect();
+                    clientX = rect.left + rect.width / 2;
+                    clientY = rect.top;
+                }
+
+                if (clientX === undefined || clientY === undefined) return;
+
+                const offset = 16;
+                let left = clientX - tooltipWidth / 2;
+                let top = clientY - tooltipHeight - offset;
+
+                const viewportWidth = window.innerWidth;
+                const viewportHeight = window.innerHeight;
+
+                if (left < 12) left = 12;
+                if (left + tooltipWidth > viewportWidth - 12) {
+                    left = viewportWidth - tooltipWidth - 12;
+                }
+                if (top < 12) {
+                    top = clientY + offset;
+                }
+
+                heatmapTooltip.style.left = `${left}px`;
+                heatmapTooltip.style.top = `${top}px`;
+            };
+
+            const showTooltip = (cell, event) => {
+                const dateStr = cell.getAttribute('data-date');
+                const count = Number(cell.getAttribute('data-count')) || 0;
+                tooltipDateEl.textContent = formatTooltipDate(dateStr);
+                tooltipCountEl.textContent = count > 0 ? `${count} 次复习 · 很棒，保持连击！` : '暂无复习记录，试着复习几个词吧！';
+                heatmapTooltip.style.opacity = '1';
+                updateTooltipPosition(event, cell);
+            };
+
+            const hideTooltip = () => {
+                heatmapTooltip.style.opacity = '0';
+            };
+
+            const heatmapCells = heatmapContainer.querySelectorAll('.heatmap-cell[data-date]');
+            heatmapCells.forEach(cell => {
+                cell.addEventListener('mouseenter', (event) => showTooltip(cell, event));
+                cell.addEventListener('mousemove', (event) => updateTooltipPosition(event, cell));
+                cell.addEventListener('mouseleave', hideTooltip);
+                cell.addEventListener('focus', (event) => showTooltip(cell, event));
+                cell.addEventListener('blur', hideTooltip);
+            });
+        }
+
+        /**
+         * 显示某天的复习单词 Modal
+         */
+        function showDailyReviewModal(dateStr) {
+            const reviewLog = getReviewLogWithSeed();
+            const parts = dateStr.split('-').map(Number);
+            const targetDate = new Date(parts[0], parts[1] - 1, parts[2]);
+            targetDate.setHours(0, 0, 0, 0);
+            const targetISO = getLocalDateString(targetDate);
+
+            const wordsMap = new Map();
+            getDifficultWords().forEach(word => {
+                const key = `${word.word}___${word.meaning || ''}`;
+                wordsMap.set(key, word);
+            });
+
+            const reviewedEntries = reviewLog.filter(entry => entry.date === targetISO);
+            reviewedEntries.sort((a, b) => a.word.localeCompare(b.word, 'en', { sensitivity: 'base' }));
+            
+            // 格式化日期显示
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+            
+            let dateLabel = '';
+            if (targetDate.getTime() === today.getTime()) {
+                dateLabel = '今天';
+            } else if (targetDate.getTime() === yesterday.getTime()) {
+                dateLabel = '昨天';
+            } else {
+                const month = targetDate.getMonth() + 1;
+                const day = targetDate.getDate();
+                const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+                const weekday = weekdays[targetDate.getDay()];
+                dateLabel = `${month}月${day}日 周${weekday}`;
+            }
+            
+            // 创建 Modal HTML
+            let modalHTML = `
+                <div id="daily-review-modal" class="daily-review-modal-overlay" onclick="if(event.target===this)closeDailyReviewModal()">
+                    <div class="daily-review-modal-content">
+                        <div class="daily-review-modal-header">
+                            <h3>${dateLabel} 复习的单词 (${reviewedEntries.length} 个)</h3>
+                            <button class="daily-review-modal-close" onclick="closeDailyReviewModal()" aria-label="关闭">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="daily-review-modal-body">
+            `;
+            
+            if (reviewedEntries.length === 0) {
+                modalHTML += '<div class="daily-review-empty">这一天没有复习记录</div>';
+            } else {
+                reviewedEntries.forEach(entry => {
+                    const key = `${entry.word}___${entry.meaning || ''}`;
+                    const liveData = wordsMap.get(key) || {};
+                    const mastery = entry.mastery || liveData.mastery || '';
+                    let masteryBadge = '';
+                    if (mastery === 'mastered') {
+                        masteryBadge = '<span class="mastery-badge mastery-badge-mastered">已掌握</span>';
+                    } else if (mastery === 'learning') {
+                        masteryBadge = '<span class="mastery-badge mastery-badge-learning">学习中</span>';
+                    } else if (mastery === 'hard') {
+                        masteryBadge = '<span class="mastery-badge mastery-badge-hard">困难</span>';
+                    }
+
+                    const phonetic = entry.phonetic || liveData.phonetic || '';
+                    const meaning = entry.meaning || liveData.meaning || '';
+                    const storyId = entry.storyId || liveData.storyId || '';
+
+                    modalHTML += `
+                        <div class="daily-review-word-item">
+                            <div class="daily-review-word-main">
+                                <div class="daily-review-word-header">
+                                    <span class="daily-review-word-text">${entry.word}</span>
+                                    <span class="daily-review-word-phonetic">${phonetic}</span>
+                                    ${masteryBadge}
+                                </div>
+                                <p class="daily-review-word-meaning">${meaning}</p>
+                                ${storyId ? `<p class="daily-review-word-source">来源: ${storyId}</p>` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            
+            modalHTML += `
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // 插入 Modal
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            
+            // 添加 ESC 键关闭功能
+            const handleEsc = function(e) {
+                if (e.key === 'Escape') {
+                    closeDailyReviewModal();
+                    document.removeEventListener('keydown', handleEsc);
+                }
+            };
+            document.addEventListener('keydown', handleEsc);
+            
+            // 锁定 body 滚动
+            document.body.style.overflow = 'hidden';
+            
+            // 动画显示
+            setTimeout(() => {
+                const modal = document.getElementById('daily-review-modal');
+                if (modal) {
+                    modal.classList.add('daily-review-modal-show');
+                }
+            }, 10);
+        }
+
+        /**
+         * 关闭某天的复习单词 Modal
+         */
+        function closeDailyReviewModal() {
+            const modal = document.getElementById('daily-review-modal');
+            if (modal) {
+                modal.classList.remove('daily-review-modal-show');
+                setTimeout(() => {
+                    modal.remove();
+                    document.body.style.overflow = '';
+                }, 200);
+            }
+        }
+
+        let wordsPageInitialized = false;
+        function startWordsPage() {
+            if (wordsPageInitialized) return;
+            wordsPageInitialized = true;
+            
+            // 首先检查并自动降级过期的"已掌握"单词
+            const downgradedCount = checkAndDowngradeExpiredWords();
+            if (downgradedCount > 0) {
+                // 显示提示信息
+                console.log(`📢 已自动将 ${downgradedCount} 个超过7天未复习的单词降级为"学习中"`);
+            }
+            
+            renderDifficultWords();
+            initWordSearch();
+        }
+
+        function setupWordsPageContext() {
+            if (window.setTimingContext) {
+                window.setTimingContext({ storyId: 'words_page', mode: 'review' });
+            } else {
+                window.currentTimingContext = { storyId: 'words_page', mode: 'review' };
+            }
+            if (window.setLearningMode) {
+                window.setLearningMode('review');
+            }
+            if (typeof window.initializeLearningTimer === 'function') {
+                window.initializeLearningTimer();
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', startWordsPage, { once: true });
+            } else {
+                startWordsPage();
+            }
+        }
+
+        if (window.dataManager && window.dataManager.appData && window.dataManager.appData.length > 0) {
+            setupWordsPageContext();
+        } else {
+            document.addEventListener('appDataReady', () => {
+                setupWordsPageContext();
+            }, { once: true });
+        }
+    </script>
+    <footer class="site-footer">
+        <p>© 2025 @kylin的小世界. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>
+

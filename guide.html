@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google" content="notranslate">
+    <meta http-equiv="Content-Language" content="zh-CN">
+    <title>使用说明 - 50篇小说背单词</title>
+    <style>
+        :root {
+            --color-primary: #347474;
+            --color-primary-dark: #285f5f;
+            --color-text-strong: #0f172a;
+            --color-text-muted: #5f6b7a;
+            --color-border: #d7e3e3;
+            --color-background: #f7f9fa;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+            color: var(--color-text-strong);
+            background-color: var(--color-background);
+            line-height: 1.7;
+        }
+
+        .top-navigation {
+            display: flex;
+            gap: 24px;
+            padding: 16px 0 12px;
+            border-bottom: 1px solid #e5e5e5;
+            margin-bottom: 30px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--color-primary);
+            text-decoration: none;
+            font-size: 1.05rem;
+            font-weight: 500;
+            transition: all 0.2s ease-in-out;
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            color: var(--color-primary-dark);
+            background-color: #e8f1f1;
+        }
+
+        .nav-link svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+            flex-shrink: 0;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 32px 64px;
+        }
+
+        h1 {
+            font-size: 2.4rem;
+            margin-bottom: 10px;
+        }
+
+        .page-subtitle {
+            color: var(--color-text-muted);
+            margin-bottom: 32px;
+            font-size: 1.05rem;
+        }
+
+        .toc-card {
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 24px;
+            box-shadow: 0 12px 32px rgba(15, 36, 40, 0.08);
+            margin-bottom: 32px;
+        }
+
+        .toc-card h2 {
+            margin: 0 0 16px;
+            font-size: 1.3rem;
+        }
+
+        .toc-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 12px;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        .toc-list a {
+            display: block;
+            padding: 10px 14px;
+            border-radius: 8px;
+            background-color: #f1f5f9;
+            color: var(--color-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .toc-list a:hover {
+            background-color: #e0eced;
+            color: var(--color-primary-dark);
+        }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        section h2 {
+            font-size: 1.6rem;
+            margin-bottom: 14px;
+        }
+
+        section h3 {
+            font-size: 1.2rem;
+            margin-top: 24px;
+            margin-bottom: 10px;
+            color: var(--color-primary);
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 24px;
+            box-shadow: 0 12px 32px rgba(15, 36, 40, 0.08);
+            margin-bottom: 24px;
+        }
+
+        ul, ol {
+            padding-left: 20px;
+        }
+
+        .highlight {
+            background: #e8f3f1;
+            border-left: 4px solid var(--color-primary);
+            padding: 16px;
+            border-radius: 10px;
+            margin: 16px 0;
+        }
+
+        .step-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        .step-item {
+            border: 1px solid #d7e3e3;
+            border-radius: 12px;
+            padding: 18px;
+            background: #f8fcfc;
+        }
+
+        .step-item strong {
+            display: block;
+            font-size: 1.1rem;
+            margin-bottom: 6px;
+            color: var(--color-primary);
+        }
+
+        .badge {
+            display: inline-block;
+            font-size: 0.8rem;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: #e0eced;
+            color: var(--color-primary);
+            margin-right: 8px;
+        }
+
+        .tip-list {
+            list-style: none;
+            padding-left: 0;
+            margin: 14px 0;
+        }
+
+        .tip-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .tip-list li::before {
+            content: '•';
+            color: var(--color-primary);
+            font-weight: bold;
+            margin-top: 2px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 20px 48px;
+            }
+
+            .top-navigation {
+                flex-wrap: wrap;
+                gap: 16px;
+            }
+
+            .nav-link {
+                font-size: 0.95rem;
+                padding: 5px 8px;
+            }
+        }
+
+        /* ===== 版权页脚样式 ===== */
+        .site-footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-top: 2rem; /* 确保和页面内容有一定间距 */
+            border-top: 1px solid #eee; /* 一条细微的分割线 */
+        }
+        .site-footer p {
+            margin: 0;
+            font-size: 0.85em; /* 字体小一点 */
+            color: #999; /* 颜色淡一点，不抢眼 */
+        }
+    </style>
+    <script type="module" src="/src/js/main.js"></script>
+</head>
+<body>
+    <div class="container">
+        <nav class="top-navigation">
+            <a href="index.html" class="nav-link">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/>
+                </svg>
+                故事列表
+            </a>
+            <a href="words.html" class="nav-link">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2zm0 15l-5-2.18L7 18V5h10v13z"/>
+                </svg>
+                我的生词本
+            </a>
+            <a href="stats.html" class="nav-link">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 3v18h18v-2H5V3H3zm4 12h2v4H7v-4zm4-4h2v8h-2v-8zm4-4h2v12h-2V7z"/>
+                </svg>
+                学习统计
+            </a>
+            <a href="settings.html" class="nav-link">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09A1.65 1.65 0 0 0 15 4.6a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9c.34.27.76.42 1.2.42H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                设置
+            </a>
+            <span class="nav-link" style="color: var(--color-primary); cursor: default; background-color: transparent;">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1.8"/>
+                    <line x1="12" y1="16" x2="12" y2="12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                    <circle cx="12" cy="8" r="1" fill="currentColor"/>
+                </svg>
+                使用说明
+            </span>
+        </nav>
+
+        <h1>使用说明</h1>
+        <p class="page-subtitle">熟悉学习流程、生词管理、复习节奏与统计数据，快速上手「50篇小说背单词」。</p>
+
+        <div class="toc-card">
+            <h2>内容导览</h2>
+            <ul class="toc-list">
+                <li><a href="#getting-started">快速上手</a></li>
+                <li><a href="#story-workflow">故事学习四步法</a></li>
+                <li><a href="#vocab-management">生词本管理</a></li>
+                <li><a href="#review-strategy">复习策略与批次逻辑</a></li>
+                <li><a href="#stats-dashboard">学习统计解读</a></li>
+                <li><a href="#faq">常见问题</a></li>
+            </ul>
+        </div>
+
+        <section id="getting-started" class="card">
+            <h2>一、快速上手</h2>
+            <p>推荐按照以下节奏体验完整流程：</p>
+            <ol>
+                <li>从故事列表中选择一个与你兴趣匹配的故事。</li>
+                <li>完成故事页的四个步骤，理解并巩固故事内的重点词汇。</li>
+                <li>将不熟悉的单词收藏到生词本。</li>
+                <li>使用复习功能巩固难点（快速复习或优先复习困难词）。</li>
+                <li>在学习统计页面查看每日学习时长、进度和复习热力图。</li>
+            </ol>
+        </section>
+
+        <section id="story-workflow" class="card">
+            <h2>二、故事学习四步法</h2>
+            <div class="step-grid">
+                <div class="step-item">
+                    <strong>Step 1：阅读模式</strong>
+                    <p>完整阅读故事，英文与中文释义同时显示。建议专注理解语境，将单词与句子含义建立联系。</p>
+                </div>
+                <div class="step-item">
+                    <strong>Step 2：中文填空</strong>
+                    <p>隐藏中文释义，只看英文。点击单词即可显示释义，已点击单词数量会记录在进度条中。</p>
+                </div>
+                <div class="step-item">
+                    <strong>Step 3：英文填空</strong>
+                    <p>隐藏英文单词，保留中文，用中文提示回忆英文拼写。每个单词的点击状态与 Step 2 独立统计。</p>
+                </div>
+                <div class="step-item">
+                    <strong>Step 4：单词表</strong>
+                    <p>查看本篇全部词汇，包含音标、释义、发音。点击星标收藏到生词本。</p>
+                </div>
+            </div>
+            <div class="highlight">
+                <strong>进度反馈：</strong>故事页面顶部的进度卡片会实时更新四个步骤的百分比，Step 2/3 同时显示“已点击 / 总单词数”。
+            </div>
+        </section>
+
+        <section id="vocab-management" class="card">
+            <h2>三、生词本管理</h2>
+            <h3>收藏与分类</h3>
+            <ul>
+                <li>在故事单词表或“本故事生词本”中点击星标即可收藏，收藏后颜色变为黄色。</li>
+                <li>生词本支持按掌握度（困难 / 学习中 / 已掌握 / 未标记）筛选，并可搜索单词、释义或来源故事。</li>
+            </ul>
+            <h3>掌握度标记</h3>
+            <p>在复习过程中，可将单词标记为“困难”“学习中”“已掌握”。标记会同步更新生词本列表和复习计划。</p>
+            <h3>数据备份</h3>
+            <p>生词本数据保存在浏览器本地，可在“设置 → 学习数据”中导出 JSON 备份或导入恢复。</p>
+        </section>
+
+        <section id="review-strategy" class="card">
+            <h2>四、复习策略与批次逻辑</h2>
+            <h3>复习模式</h3>
+            <ul>
+                <li><span class="badge">快速复习</span>随机抽取 10～20 个生词，适合短时间回顾。</li>
+                <li><span class="badge">优先复习困难词</span>优先抽取“困难”“学习中”的单词，并按照 8～18 个/批次控制认知负荷：
+                    <ul>
+                        <li>若困难词少于等于 15 个，将全部纳入。</li>
+                        <li>若困难词很多，取总量约 25%，但不低于 8 个、不超过 18 个。</li>
+                        <li>完成一批后可再次点击，继续下一批。</li>
+                    </ul>
+                </li>
+            </ul>
+            <h3>间隔重复</h3>
+            <p>标记掌握度后，会按照艾宾浩斯曲线安排复习间隔：</p>
+            <ul>
+                <li>已掌握：复习次数 +1，间隔从 1 天逐步延长（1 → 3 → 7 → 14 → 30 → 60 → 90 天）。</li>
+                <li>学习中：保持当前复习次数和间隔。</li>
+                <li>困难：复习次数重置为 0，间隔恢复到 1 天。</li>
+            </ul>
+            <div class="highlight">
+                <strong>复习日志：</strong>每次标记都会写入复习日志，用于学习统计的热力图与弹窗回顾。复习历史保留最近 365 天。
+            </div>
+        </section>
+
+        <section id="stats-dashboard" class="card">
+            <h2>五、学习统计解读</h2>
+            <h3>核心指标</h3>
+            <ul>
+                <li><strong>今日学习目标</strong>：今日已完成单词数、剩余目标数。</li>
+                <li><strong>学习时长</strong>：故事页面每 60 秒自动记录一次；切换模式或离开页面时会立即写入。</li>
+                <li><strong>学习进度</strong>：汇总每个故事的四步进度值。</li>
+            </ul>
+            <h3>复习总览</h3>
+            <ul>
+                <li><strong>掌握度饼图</strong>：展示已掌握、学习中、困难、未标记的比例。</li>
+                <li><strong>复习日历</strong>：以本地时间为准，每日完成复习的单词数量。点击任意格子可查看当天复习的单词列表。</li>
+            </ul>
+        </section>
+
+        <section id="faq" class="card">
+            <h2>六、常见问题</h2>
+            <h3>Q1. 如何恢复使用说明弹窗？</h3>
+            <p>点击导航栏“使用说明”即可重新查看本页面。如果需要简版介绍，可回到故事列表页，使用欢迎弹窗中的“开始学习”按钮。</p>
+            <h3>Q2. 学习数据是否会自动同步？</h3>
+            <p>目前所有数据保存在浏览器本地，可在“设置 → 学习数据”中导出备份或导入恢复。</p>
+            <h3>Q3. 如何重新开始？</h3>
+            <p>在“设置 → 重置与恢复”中可重置故事进度或全部数据。重置操作不可撤销，请谨慎使用。</p>
+        </section>
+    </div>
+    <footer class="site-footer">
+        <p>© 2025 @kylin的小世界. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>
