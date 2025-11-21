@@ -23,11 +23,17 @@
 本仓库主要演示核心引擎功能。
 
 **正在寻找完整版体验？**
-正式产品拥有精心编写的 **50 篇连载故事**，覆盖 **4000+** 核心考研/GRE 词汇，提供更完整的进阶学习体验。
+正式产品会拥有精心编写的 **50 篇连载故事**，覆盖 **4000+** 核心考研/GRE 词汇，提供更完整的进阶学习体验。
 
 👉 **在线体验完整版：** [https://wordnovelwebdemo.click](https://wordnovelwebdemo.click)
+
 👉 **关注开发者小红书：** **@kylin的小世界** (获取最新动态及完整数据包)
-<img src="./public/xhs_qr.png" width="200" alt="小红书二维码">
+
+<br>
+
+<div align="center">
+    <img src="public/xhs_qr.png" width="200" alt="小红书二维码">
+</div>
 
 ## 🛠️ 技术栈
 
@@ -91,9 +97,9 @@ read-novel-vocab-engine/
 <br>
 
 <div align="center">
-    <img src="./public/sponsor_wechat.png" width="200" alt="微信支付" style="margin-right: 20px;">
-    <img src="./public/sponsor_alipay.png" width="200" alt="支付宝">
-    <p><sub>感谢您的支持！所有赞助将用于后续的服务器维护和我的秃头治疗费 💇🏻‍♀️</sub></p>
+    <img src="public/sponsor_wechat.png" width="200" alt="微信支付" style="margin-right: 20px;">
+    <img src="public/sponsor_alipay.png" width="200" alt="支付宝">
+    <p><sub>感谢您的支持！所有赞助将用于后续的服务器维护和我的秃头治疗 💇🏻‍♀️</sub></p>
 </div>
 
 </details>
