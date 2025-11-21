@@ -87,19 +87,11 @@ read-novel-vocab-engine/
 
 © 2025 @kylin的小世界. All Rights Reserved.
 
-## ❤️ 支持开发者
-
+❤️ 支持开发者
 如果你觉得这个项目对你有启发，或者单纯想请我喝杯咖啡（以此加速完整版小程序的开发），欢迎打赏！
 
-<details>
-<summary><strong>👉 点击展开赞助二维码 (WeChat / Alipay)</strong></summary>
+<details> <summary><strong>👉 点击展开赞助二维码 (WeChat / Alipay)</strong></summary>
 
-<br>
-
-<div align="center">
-    <img src="public/sponsor_wechat.png" width="200" alt="微信支付" style="margin-right: 20px;">
-    <img src="public/sponsor_alipay.png" width="200" alt="支付宝">
-    <p><sub>感谢您的支持！所有赞助将用于后续的服务器维护和我的秃头治疗 💇🏻‍♀️</sub></p>
-</div>
+<div align="center"> <img src="public/sponsor_wechat.png" width="200" alt="微信支付" style="margin-right: 20px;"> <img src="public/sponsor_alipay.png" width="200" alt="支付宝"> <p><sub>感谢您的支持！所有赞助将用于后续的服务器维护和我的秃头治疗费 💇🏻‍♀️</sub></p> </div>
 
 </details>
