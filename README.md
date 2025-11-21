@@ -64,9 +64,9 @@ npm run build:demo：构建生产版本（自动生成 Demo 数据并混淆代�
 npm run preview：预览构建后的生产环境代码。
 
 
-📂 项目结构
-Plaintext
+## 📂 项目结构
 
+```text
 read-novel-vocab-engine/
 ├── public/
 │   ├── data_demo.json       # 演示数据（10篇故事）
@@ -78,12 +78,14 @@ read-novel-vocab-engine/
 ├── *.html                   # 多页面入口 (index/story/words...)
 ├── vite.config.js           # Vite 配置
 └── README.md                # 项目文档
-⚠️ 注意事项
-数据隔离：本项目仅包含 data_demo.json。完整版数据 data_full.json 属于私有资产，未包含在此仓库中。
+```
+
+## ⚠️ 注意事项
+1. 数据隔离：本项目仅包含 data_demo.json。完整版数据 data_full.json 属于私有资产，未包含在此仓库中。
 
 代码混淆：为了保护知识产权，执行 npm run build:demo 后生成的 dist/ 目录中，核心逻辑代码会被混淆。
 
-📄 版权与许可
+## 📄 版权与许可
 本项目代码部分遵循开源协议，内容数据（故事文本）仅供演示使用。
 
 如需商业合作或获取完整内容授权，请通过小红书联系本项目开发者：@kylin的小世界
